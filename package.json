@@ -1,7 +1,7 @@
 {
-  "name": "json-autoform",
+  "name": "@manufosela/json-autoform",
   "description": "Webcomponent json-autoform following open-wc recommendations",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "author": "manufosela",
   "version": "1.0.1",
   "main": "json-autoform.js",
