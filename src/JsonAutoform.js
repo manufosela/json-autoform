@@ -803,8 +803,6 @@ export class JsonAutoform extends LitElement {
         });
         document.dispatchEvent(saveFormEvent);
       }
-    } else {
-      console.log('Form not valid');
     }
   }
 
