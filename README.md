@@ -20,21 +20,53 @@ npm i json-autoform
 
 ## Attributes:
 
-- modelName is the name of the model to be used inside the **schema**.
-- name is the name of the form.
-- level the level of the web component. If the level is greater than 0, the web component belongs to other json-autoform web component and it will be rendered into a fieldset
+- **modelName** is the name of the model to be used inside the **schema**.
+- **name** is the name of the form.
+- **level** the level of the web component. If the level is greater than 0, the web component belongs to other json-autoform web component and it will be rendered into a fieldset
 
 ## Events:
 
-### Output dispatched events:
+### Dispatched events:
 
-- wc-ready: when the web component is ready.
-- save-form: when the form is saved.
-- form-updated: when a field of the form is updated.
+- **wc-ready**: when the web component is ready.
+- **save-form**: when the form is saved.
+- **form-updated**: when a field of the form is updated.
 
-### Output listened events:
+### Listened events:
 
-- json-fill-data: to fill the form with data.
+- **json-fill-data**: to fill the form with data.
+
+## Theming:
+
+- **--json-autoform-fieldset-border** Default 1px solid #ccc
+- **--json-autoform-border-radius**. Default 1rem
+- **--json-autoform-margin**. Default 1rem
+- **--json-autoform-padding**. Default 1rem
+- **--json-autoform-direction**. Default column
+- **--json-autoform-wrap**. Default wrap
+- **--json-autoform-justify**. Default flex-start
+- **--json-autoform-label-padding**. Default 0
+- **--json-autoform-label-margin**. Default 0.5rem 0 0 0
+- **--json-autoform-label-font-size**. Default 1rem
+- **--json-autoform-label-font-weight**. Default bold
+- **--json-autoform-label-color**. Default #000
+- **--json-autoform-bocadillo-cuadrado-height**. Default 200px
+- **--json-autoform-bocadillo-cuadrado-width**. Default 300px
+- **--json-autoform-bocadillo-cuadrado-background**. Default #fff
+- **--json-autoform-bocadillo-cuadrado-padding**. Default 1rem
+- **--json-autoform-bocadillo-cuadrado-font-family**. Default system-ui
+- **--json-autoform-btn-font-weight**. Default 400;
+- **--json-autoform-btn-line-height**. Default 1.5
+- **--json-autoform-btn-color**. Default #212529
+- **--json-autoform-btn-background-color**. Default transparent
+- **--json-autoform-btn-border**. Default 1px solid transparent
+- **--json-autoform-btn-padding**. Default 0.375rem 0.75rem
+- **--json-autoform-btn-font-size**. Default 1rem
+- **--json-autoform-btn-border-radius**. Default 0.25rem
+- **--json-autoform-btn-max-width**. Default 9rem
+- **--json-autoform-btn-primary-background-color**. Default #0d6efd
+- **--json-autoform-btn-primary-border-color**. Default #0d6efd
+- **--json-autoform-btn-primary-margin-left**. Default 1rem
 
 ## Linting and formatting
 

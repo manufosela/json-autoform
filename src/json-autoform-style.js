@@ -7,22 +7,24 @@ export const jsonAutoformStyles = css`
   }
 
   fieldset {
-    border: 1px solid #ddd !important;
-    border-radius: 1rem;
-    margin: 1rem;
-    padding: 1rem;
+    border: var(--json-autoform-fieldset-border, 1px solid #ccc)!important;
+    border-radius: var(--json-autoform-border-radius, 1rem);
+    margin: var(--json-autoform-margin, 1rem);
+    padding: var(--json-autoform-padding, 1rem);
     display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    justify-content: flex-start;
+    flex-direction: var(--json-autoform-direction, column);
+    flex-wrap: var(--json-autoform-wrap, wrap);
+    justify-content: var(--json-autoform-justify, flex-start);
   }
 
   label {
-    padding: 0;
-    margin-top: 0.5rem;
-    font-size: 1.2rem;
-    font-weight: bold;
+    padding: var(--json-autoform-label-padding, 0);
+    margin: var(--json-autoform-label-margin, 0.5rem 0 0 0);
+    font-size: var(--json-autoform-label-font-size, 1rem);
+    font-weight: var(--json-autoform-label-font-weight, bold);  
+    color: var(--json-autoform-label-color, #000);
   }
+  
   .form-main-label {
     grid-area: 1 / 2 / 1 / 3;
   }
@@ -51,13 +53,13 @@ export const jsonAutoformStyles = css`
 
   .bocadillo-cuadrado {
     position: absolute;
-    height: 200px;
-    width: 300px;
-    background: white;
+    height: var(--json-autoform-bocadillo-cuadrado-height, 200px);
+    width: var(--json-autoform-bocadillo-cuadrado-width, 300px);
+    background: var(--json-autoform-bocadillo-cuadrado-background, #fff);
     box-shadow: 1px 12px 33px rgba(0, 0, 0, 0.5);
     border-radius: 5px;
-    padding: 1rem;
-    font-family: system-ui;
+    padding: var(--json-autoform-bocadillo-cuadrado-padding, 1rem);
+    font-family: var(--json-autoform-bocadillo-cuadrado-font-family, system-ui);
   }
 
   .bocadillo-cuadrado:before {
@@ -111,9 +113,9 @@ export const jsonAutoformStyles = css`
 
   .btn {
     display: inline-block;
-    font-weight: 400;
-    line-height: 1.5;
-    color: #212529;
+    font-weight: var(--json-autoform-btn-font-weight, 400;
+    line-height: var(--json-autoform-btn-line-height, 1.5);
+    color: var(--json-autoform-btn-color, #212529);
     text-align: center;
     text-decoration: none;
     vertical-align: middle;
@@ -121,21 +123,21 @@ export const jsonAutoformStyles = css`
     -webkit-user-select: none;
     -moz-user-select: none;
     user-select: none;
-    background-color: transparent;
-    border: 1px solid transparent;
-    padding: 0.375rem 0.75rem;
-    font-size: 1rem;
-    border-radius: 0.25rem;
+    background-color: var(--json-autoform-btn-background-color, transparent);
+    border: var(--json-autoform-btn-border, 1px solid transparent);
+    padding: var(--json-autoform-btn-padding, 0.375rem 0.75rem);
+    font-size: var(--json-autoform-btn-font-size, 1rem);
+    border-radius: var(--json-autoform-btn-border-radius, 0.25rem);
     transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
       border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-    max-width: 9rem;
+    max-width: var(--json-autoform-btn-max-width, 9rem);
   }
 
   .btn-primary {
     color: #fff;
-    background-color: #0d6efd;
-    border-color: #0d6efd;
+    background-color: var(--json-autoform-btn-primary-background-color, #0d6efd);
+    border-color: var(--json-autoform-btn-primary-border-color, #0d6efd);
     grid-area: 2 / 3 / 2 / 3;
-    margin-left: 1rem;
+    margin-left: var(--json-autoform-btn-primary-margin-left, 1rem);
   }
 `;
