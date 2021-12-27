@@ -15,8 +15,26 @@ npm i json-autoform
   import 'json-autoform/json-autoform.js';
 </script>
 
-<json-autoform></json-autoform>
+<json-autoform model-name="user" name="userForm"></json-autoform>
 ```
+
+## Attributes:
+
+- modelName is the name of the model to be used inside the **schema**.
+- name is the name of the form.
+- level the level of the web component. If the level is greater than 0, the web component belongs to other json-autoform web component and it will be rendered into a fieldset
+
+## Events:
+
+### Output dispatched events:
+
+- wc-ready: when the web component is ready.
+- save-form: when the form is saved.
+- form-updated: when a field of the form is updated.
+
+### Output listened events:
+
+- json-fill-data: to fill the form with data.
 
 ## Linting and formatting
 
@@ -74,7 +92,7 @@ npm start
 
 To run a local development server that serves the basic demo located in `demo/index.html`
 
-## FIELD TYPES
+## SCHEMA FIELD TYPES
 
 ### PREFIX
 
