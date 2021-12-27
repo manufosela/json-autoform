@@ -37,15 +37,6 @@ export class JsonAutoform extends LitElement {
        * <json-autoform level="1" model-name="user" name="user" show-name="true"></json-autoform>
        */
       level: { type: Number, reflect: true },
-      /**
-       * @description Set automatic save when blurs a input field or textarea
-       * @type {Boolean}
-       * @attribute auto-save
-       * @default false
-       * @example
-       * <json-autoform auto-save="true" model-name="user" name="user" show-name="true"></json-autoform>
-       */
-      autoSave: { type: Boolean, attribute: 'auto-save' },
     };
   }
 
@@ -61,7 +52,6 @@ export class JsonAutoform extends LitElement {
     this.info = {};
     this.types = {};
     this.data = {};
-    this.formValues = {};
     this.user = null;
 
     this.container = null;
@@ -132,6 +122,48 @@ export class JsonAutoform extends LitElement {
       });
       document.dispatchEvent(componentCreatedEvent);
     });
+    document.addEventListener('json-fill-data', this._fillData.bind(this));
+  }
+
+  _getDataVerified(data) {
+    const realData = {};
+    if (data) {
+      if (typeof data === 'object') {
+        const dataKeys = Object.keys(data);
+        dataKeys.forEach(key => {
+          if (typeof data[key] === 'object') {
+            realData[key] = this._getDataVerified(data[key]);
+          } else {
+            realData[key] = data[key];
+          }
+        });
+      }
+    }
+    return realData;
+  }
+
+  _fillDataValues(myScope = this.shadowRoot) {
+    const scope = myScope;
+    const dataKeys = Object.keys(this.data);
+    dataKeys.forEach(key => {
+      const value = this.data[key];
+      if (typeof value === 'object') {
+        this._fillDataValues(value);
+      } else if (scope.querySelector(`[name="${key}"]`)) {
+        scope.querySelector(`[name="${key}"]`).value = value;
+      } else {
+        scope.querySelectorAll('json-autoform').forEach(jsonAutoform => {
+          this._fillDataValues(jsonAutoform.shadowRoot);
+        });
+      }
+    });
+  }
+
+  _fillData(event) {
+    if (event.detail.id === this.id) {
+      this.data = this._getDataVerified(event.detail.data);
+      this._fillDataValues();
+    }
   }
 
   _getContainer(modelElementName) {
