@@ -10,19 +10,51 @@ export class JsonAutoform extends LitElement {
 
   static get properties() {
     return {
+      /**
+       * @description The name of the model inside the __schema__.
+       * @type {String}
+       * @attribute model-name
+       * @default ''
+       * @example
+       * <json-autoform model-name="user"></json-autoform>
+       */
       modelName: { type: String, attribute: 'model-name' },
+      /**
+       * @description The name of the form.
+       * @type {String}
+       * @attribute name
+       * @default ''
+       * @example
+       * <json-autoform name="userForm"></json-autoform>
+       */
       name: { type: String },
-      showName: { type: Boolean, attribute: 'show-name' },
+      /**
+       * @description Set the level of the web component. If the level is greater than 0, the web component belongs to other json-autoform web component and it will be rendered into a fieldset
+       * @type {Number}
+       * @attribute level
+       * @default 0
+       * @example
+       * <json-autoform level="1" model-name="user" name="user" show-name="true"></json-autoform>
+       */
       level: { type: Number, reflect: true },
+      /**
+       * @description Set automatic save when blurs a input field or textarea
+       * @type {Boolean}
+       * @attribute auto-save
+       * @default false
+       * @example
+       * <json-autoform auto-save="true" model-name="user" name="user" show-name="true"></json-autoform>
+       */
+      autoSave: { type: Boolean, attribute: 'auto-save' },
     };
   }
 
-  constructor(modelName = '', name = '', showName = false) {
+  constructor({ modelName = '', name = '', level = 0, autoSave = false } = {}) {
     super();
     this.modelName = modelName;
     this.name = name;
-    this.showName = showName;
-    this.level = 0;
+    this.level = level;
+    this.autoSave = autoSave;
 
     this.model = {};
     this.groups = {};
@@ -216,20 +248,6 @@ export class JsonAutoform extends LitElement {
       scope: this.shadowRoot,
     });
   }
-
-  // _drawMultiple(bFieldMultiple, modelElementName, divLayer, type) {
-  //   const fnTypes = {
-  //     input: this._createAddInputBtn.bind(this, modelElementName),
-  //     textarea: this._createAddTextareaBtn.bind(this, modelElementName),
-  //     select: this._createAddSelectBtn.bind(this, modelElementName),
-  //     model: this._createAddModelBtn.bind(this, modelElementName),
-  //   };
-
-  //   if (bFieldMultiple) {
-  //     const addButton = fnTypes[type](modelElementName);
-  //     divLayer.appendChild(addButton);
-  //   }
-  // }
 
   /** CREATE FORM ELEMENTS */
   _createLabel(modelElementName) {
@@ -610,38 +628,6 @@ export class JsonAutoform extends LitElement {
     const parentId = this.container.id;
     return this._getElementId(parentId, modelElementName);
   }
-
-  // getFieldsetElements(layer = this.container) {
-  //   const myStorage = {};
-  //   const fieldsetElements = layer.querySelectorAll(':scope > fieldset');
-  //   // console.log(`Get Fieldsets from ${layer.id}`);
-  //   fieldsetElements.forEach(fieldset => {
-  //     const legend = fieldset.querySelector('legend');
-  //     myStorage[legend.innerText] = this.getFormValues(fieldset);
-  //   });
-  //   return myStorage;
-  // }
-
-  // getFormValues(layer) {
-  //   const storage = {};
-  //   const formElements = layer.querySelectorAll(
-  //     'div > input, div > textarea, div > select, :scope > fieldset'
-  //   );
-  //   // console.log(`Get form values from ${layer.id}`);
-  //   formElements.forEach(formElement => {
-  //     const modelElementName = formElement.getAttribute('name');
-  //     if (formElement.tagName === 'SELECT') {
-  //       storage[modelElementName] = formElement.value;
-  //     } else if (formElement.tagName === 'INPUT') {
-  //       storage[modelElementName] = formElement.value;
-  //     } else if (formElement.tagName === 'TEXTAREA') {
-  //       storage[modelElementName] = formElement.value;
-  //     } else if (formElement.tagName === 'FIELDSET') {
-  //       storage[modelElementName] = this.getFieldsetElements(formElement);
-  //     }
-  //   });
-  //   return storage;
-  // }
 
   /** ADD EVENTS */
   _addSelectEvents(select, modelElementName) {
