@@ -130,7 +130,12 @@ export class JsonAutoform extends LitElement {
     }
   }
 
-  _drawSingleFields(fieldFormType, modelElementName, container = this._getContainer(modelElementName), where = 'inside') {
+  _drawSingleFields(
+    fieldFormType,
+    modelElementName,
+    container = this._getContainer(modelElementName),
+    where = 'inside'
+  ) {
     const field = this.fnFormTypes[fieldFormType](
       modelElementName,
       fieldFormType
@@ -139,16 +144,29 @@ export class JsonAutoform extends LitElement {
     this._createInfoIcon(field, modelElementName);
   }
 
-  _drawNewBbddFields(fieldFormType, modelElementName, container = this._getContainer(modelElementName), where = 'inside') {
+  _drawNewBbddFields(
+    fieldFormType,
+    modelElementName,
+    container = this._getContainer(modelElementName),
+    where = 'inside'
+  ) {
     this._drawSingleFields(fieldFormType, modelElementName, container, where);
   }
 
-  _drawMultipleFields(fieldFormType, modelElementName, container = this._getContainer(modelElementName), where = 'inside') {
+  _drawMultipleFields(
+    fieldFormType,
+    modelElementName,
+    container = this._getContainer(modelElementName),
+    where = 'inside'
+  ) {
     const field = this.fnFormTypes[fieldFormType](
       modelElementName,
       fieldFormType
     );
-    const divLayer = this._createDivLayer(modelElementName, 'multiple_container');
+    const divLayer = this._createDivLayer(
+      modelElementName,
+      'multiple_container'
+    );
     container.appendChild(divLayer);
     this._insertField(field, divLayer, where);
     this._createInfoIcon(field, modelElementName);
@@ -185,12 +203,7 @@ export class JsonAutoform extends LitElement {
     this.allGroupValues = this._getAllGroupValues();
     Object.keys(model).forEach(modelElementName => {
       const [fieldType, fieldFormType] = model[modelElementName].split('_');
-      try {
-        this.fnTypes[fieldType](fieldFormType, modelElementName);
-      } catch(e) {
-        console.log(e);
-        console.log(fieldType, fieldFormType, modelElementName);
-      }
+      this.fnTypes[fieldType](fieldFormType, modelElementName);
     });
   }
 
@@ -233,7 +246,7 @@ export class JsonAutoform extends LitElement {
     const input = document.createElement('input');
     input.setAttribute('type', fieldType);
     input.setAttribute('name', modelElementName);
-    input.setAttribute('id', this._getNewId(modelElementName)); 
+    input.setAttribute('id', this._getNewId(modelElementName));
     input.setAttribute('value', '');
     input.classList.add('form-control');
     return this._addValidation(input, modelElementName);
@@ -241,7 +254,10 @@ export class JsonAutoform extends LitElement {
 
   _createRichInputfile(modelElementName) {
     const validation = this.validation[modelElementName];
-    const elemAttributes = [`id="${modelElementName}"`, `name="${modelElementName}"`]; 
+    const elemAttributes = [
+      `id="${modelElementName}"`,
+      `name="${modelElementName}"`,
+    ];
     if (validation) {
       const validationKeys = Object.keys(validation);
       validationKeys.forEach(validationKey => {
@@ -250,8 +266,13 @@ export class JsonAutoform extends LitElement {
           elemAttributes.push(`data-required="${validationValue}"`);
         }
         if (validationKey === 'tovalidate') {
-          elemAttributes.push(`allowed-extensions="${String(validationValue).replace('file:','')}"`);
-        }          
+          elemAttributes.push(
+            `allowed-extensions="${String(validationValue).replace(
+              'file:',
+              ''
+            )}"`
+          );
+        }
       });
     }
     const richInputfile = `<rich-inputfile 
@@ -353,7 +374,10 @@ export class JsonAutoform extends LitElement {
   /** CREATE FROM FIELDS (div with label, form element and icon info) */
   _createDivLayer(modelElementName, layerPrefixName = 'layer-field') {
     const divLayer = document.createElement('div');
-    divLayer.setAttribute('id', this._getElementId(layerPrefixName, modelElementName));
+    divLayer.setAttribute(
+      'id',
+      this._getElementId(layerPrefixName, modelElementName)
+    );
     return divLayer;
   }
 
@@ -481,7 +505,9 @@ export class JsonAutoform extends LitElement {
   /** CREATE ADD BUTTONS */
   _addBtnProperties(btn, modelElementName) {
     const addButton = btn;
-    const numButtons = [...this.shadowRoot.querySelectorAll(`[id^="add-${modelElementName}"]`)].length;
+    const numButtons = [
+      ...this.shadowRoot.querySelectorAll(`[id^="add-${modelElementName}"]`),
+    ].length;
     if (numButtons === 0) {
       addButton.setAttribute('id', `add-${modelElementName}-${numButtons}`);
       addButton.title = `Add new ${modelElementName}`;
@@ -495,21 +521,32 @@ export class JsonAutoform extends LitElement {
     e.preventDefault();
     const { parentElement } = e.target.parentElement;
     const [fieldType, fieldFormType] = this.model[modelElementName].split('_');
-    this.fnTypes[fieldType](fieldFormType, modelElementName, parentElement, 'last');
+    this.fnTypes[fieldType](
+      fieldFormType,
+      modelElementName,
+      parentElement,
+      'last'
+    );
+    // console.log(modelElementName, this.model[modelElementName]);
   }
 
   _createAddButton(modelElementName) {
-    const numButtons = [...this.shadowRoot.querySelectorAll(`[id^="add-${modelElementName}"]`)].length;
+    const numButtons = [
+      ...this.shadowRoot.querySelectorAll(`[id^="add-${modelElementName}"]`),
+    ].length;
     if (numButtons === 0) {
       const addButton = document.createElement('button');
       this._addBtnProperties(addButton, modelElementName);
-      addButton.addEventListener('click', this._addNewElement.bind(this, modelElementName));
+      addButton.addEventListener(
+        'click',
+        this._addNewElement.bind(this, modelElementName)
+      );
       return addButton;
     }
     return null;
   }
 
-  _createSaveBtn() { 
+  _createSaveBtn() {
     const saveButton = document.createElement('button');
     saveButton.title = 'Save';
     saveButton.innerHTML = 'Save';
@@ -561,8 +598,12 @@ export class JsonAutoform extends LitElement {
 
   /** GETTERS */
   _getElementId(element, modelElementName) {
-    const nLayer = [...this.shadowRoot.querySelectorAll(`[id^="${element}-${modelElementName}"]`)].length;
-    return `${element}-${modelElementName}-${nLayer}`
+    const nLayer = [
+      ...this.shadowRoot.querySelectorAll(
+        `[id^="${element}-${modelElementName}"]`
+      ),
+    ].length;
+    return `${element}-${modelElementName}-${nLayer}`;
   }
 
   _getNewId(modelElementName) {
@@ -624,7 +665,7 @@ export class JsonAutoform extends LitElement {
 
   _addTextareaEvents(textarea, modelElementName) {
     textarea.addEventListener('change', e => {
-      this.model[modelElementName] = e.target.value;
+      this.data[modelElementName] = e.target.value;
       this.isFormUpdated();
     });
   }
@@ -732,12 +773,12 @@ export class JsonAutoform extends LitElement {
   saveForm(e) {
     e.preventDefault();
     this.data = this.getFormData();
-    if (this.level===0) {
+    if (this.level === 0) {
       const saveFormEvent = new CustomEvent('save-form', {
         detail: {
           id: this.id,
           data: this.data,
-        }
+        },
       });
       document.dispatchEvent(saveFormEvent);
     }
@@ -745,23 +786,29 @@ export class JsonAutoform extends LitElement {
 
   getFormData() {
     const data = {};
-    this.container.querySelectorAll('input[type="text"], input[type="number"], select, textarea, rich-inputfile').forEach(input => {
-      if (!data[input.name]) {
-        data[input.name] = input.value;
-      } else if (Array.isArray(data[input.name])) {
-        data[input.name].push(input.value);
-      } else {
-        const tmp = data[input.name];
-        data[input.name] = [tmp, input.value];
-      }
-    });
-    this.container.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(input => {
-      if (input.checked) {
-        data[input.name] = input.value;
-      } else if (data[input.name]===undefined) {
-        data[input.name] = '';
-      }
-    });
+    this.container
+      .querySelectorAll(
+        'input[type="text"], input[type="number"], select, textarea, rich-inputfile'
+      )
+      .forEach(input => {
+        if (!data[input.name]) {
+          data[input.name] = input.value;
+        } else if (Array.isArray(data[input.name])) {
+          data[input.name].push(input.value);
+        } else {
+          const tmp = data[input.name];
+          data[input.name] = [tmp, input.value];
+        }
+      });
+    this.container
+      .querySelectorAll('input[type="radio"], input[type="checkbox"]')
+      .forEach(input => {
+        if (input.checked) {
+          data[input.name] = input.value;
+        } else if (data[input.name] === undefined) {
+          data[input.name] = '';
+        }
+      });
     this.container.querySelectorAll('json-autoform').forEach(jsonAutoform => {
       if (!data[jsonAutoform.name]) {
         data[jsonAutoform.name] = jsonAutoform.getFormData();
