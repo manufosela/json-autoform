@@ -791,14 +791,20 @@ export class JsonAutoform extends LitElement {
   saveForm(e) {
     e.preventDefault();
     this.data = this.getFormData();
-    if (this.level === 0) {
-      const saveFormEvent = new CustomEvent('save-form', {
-        detail: {
-          id: this.id,
-          data: this.data,
-        },
-      });
-      document.dispatchEvent(saveFormEvent);
+    const okFieldsNoEmpty = this.validateForm.noEmptyFields();
+    const okFieldsValidated = this.validateForm.validateFields();
+    if (okFieldsNoEmpty && okFieldsValidated) {
+      if (this.level === 0) {
+        const saveFormEvent = new CustomEvent('save-form', {
+          detail: {
+            id: this.id,
+            data: this.data,
+          },
+        });
+        document.dispatchEvent(saveFormEvent);
+      }
+    } else {
+      console.log('Form not valid');
     }
   }
 
