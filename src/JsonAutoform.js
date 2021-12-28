@@ -10,6 +10,7 @@ export class JsonAutoform extends LitElement {
 
   static get properties() {
     return {
+      id: { type: String },
       /**
        * @description The name of the model inside the __schema__.
        * @type {String}
@@ -42,6 +43,7 @@ export class JsonAutoform extends LitElement {
 
   constructor({ modelName = '', name = '', level = 0, autoSave = false } = {}) {
     super();
+    this.id = `json-keyslist${Math.floor(Math.random() * 1000000)}`;
     this.modelName = modelName;
     this.name = name;
     this.level = level;
