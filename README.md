@@ -68,6 +68,209 @@ npm i json-autoform
 - **--json-autoform-btn-primary-border-color**. Default #0d6efd
 - **--json-autoform-btn-primary-margin-left**. Default 1rem
 
+## SCHEMA
+
+El esquema que interpreta el componente es una estructura de datos que define el formulario.
+Tiene la siguiente estructura:
+
+```json
+"nombre_formulario"": {
+  "__model__": {},
+  "__labels__": {},
+  "__types__": {},
+  "__groups__": {},
+  "__info__": {},
+  "__validations__": {},
+}
+```
+
+### Model
+
+En "**model**" se indica de qué tipo será cada campo del formulario. Podemos elegir entre los tipos de campos de formulario: "text", "number", "file", "radio", "checkbox", "date"... Además de "select" y "textarea".
+En caso de que el campo sea de tipo "select", "radio" y "checkbox"(opcionalmente), se debe indicar seguido de dos puntos el id que irá en el esquema que contiene los "options".
+En caso de querer que el campo sea otro modelo, se indica "model" seguido de dos puntos y el nombre del modelo, que debe estar definido en el esquema.
+El id de cada campo se usará como nombre del campo en el formulario.
+En la etiqueta _label_ se mostrará sin '\_' que serán reemplazados por ' ' en el nombre del campo en caso de que no exista en el esquema dentro de '**labels**'.
+
+```json
+"__model__": {
+  "single_number_field_one": "number",
+  "single_string_field_two": "string",
+  "single_string_field_twoandhalf": "string",
+  "single_radio_field_three_withoutgroup": "radio:single_radio_field_three_withoutgroup",
+  "single_textarea_field_four": "textarea",
+  "single_file_field_six": "file",
+  "single_checkbox_field_five_withoutgroup_neitherinfo": "checkbox",
+  "single_model_field_six": "model:single_model_field_six",
+  "newbbdd_number_field_seven": "number",
+  "newbbdd_string_field_eight": "string",
+  "newbbdd_model_field_eightandhalf": "select:myOptions",
+  "multiple_number_field_nine": "number",
+  "multiple_string_field_ten": "string",
+  "multiple_radio_field_eleven": "radio",
+  "multiple_textarea_field_twelwe": "textarea",
+  "multiple_model_field_thirteen": "model:multiple_model_field_thirteen"
+},
+```
+
+### Labels
+
+En "**labels**" se indican las etiquetas de los campos del formulario. Si no estuviera definido se tomará por defecto el id del campo reemplazando los '\_' por ' '.
+
+```json
+"__labels__": {
+  "single_number_field_one": "Single number field one",
+  "single_string_field_two": "Single string field two",
+  "single_string_field_twoandhalf": "Single string field two and half",
+  "single_radio_field_three_withoutgroup": "Single radio field three without group",
+  "single_textarea_field_four": "Single textarea field four",
+  "single_file_field_six": "Single file field six",
+  "single_checkbox_field_five_withoutgroup_neitherinfo": "Single checkbox field five without group neither info",
+  "single_model_field_six": "Single model field six",
+  "newbbdd_number_field_seven": "Newbbdd number field seven",
+  "newbbdd_string_field_eight": "Newbbdd string field eight",
+  "newbbdd_model_field_eightandhalf": "Newbbdd model field eight and half",
+  "multiple_number_field_nine": "Multiple number field nine",
+  "multiple_string_field_ten": "Multiple string field ten",
+  "multiple_radio_field_eleven": "Multiple radio field eleven",
+  "multiple_textarea_field_twelwe": "Multiple textarea field twelwe",
+  "multiple_model_field_thirteen": "Multiple model field thirteen"
+}
+```
+
+### Types
+
+En "**types**" se indica si el campo es único o se repite. Los valores posibles son "single" y "multiple". En caso de no especificarse, por defecto es "single".
+
+```json
+"__types__": {
+  "single_number_field_one": "single",
+  "single_string_field_two": "single",
+  "single_string_field_twoandhalf": "single",
+  "single_radio_field_three_withoutgroup": "single",
+  "single_textarea_field_four": "single",
+  "single_file_field_six": "single",
+  "single_checkbox_field_five_withoutgroup_neitherinfo": "single",
+  "single_model_field_six": "single",
+  "newbbdd_number_field_seven": "single",
+  "newbbdd_string_field_eight": "single",
+  "newbbdd_model_field_eightandhalf": "single",
+  "multiple_number_field_nine": "multiple",
+  "multiple_string_field_ten": "multiple",
+  "multiple_radio_field_eleven": "multiple",
+  "multiple_textarea_field_twelwe": "multiple",
+  "multiple_model_field_thirteen": "multiple"
+},
+```
+
+### Groups
+
+En "**groups**" se encuentran los grupos de campos que se deben mostrar en el formulario, que se mostrarán dentro de un fieldset.
+El id de cada grupo aparecerá como _legend_ del fieldset. En el caso de usar valores numéricos se mostrará sin _legend_.
+Todos los elementos serán arrays de strings con los nombres de los campos.
+Los campos de "**model**" que no estén definidos en ningún grupo se pintarán al final del formulario sueltos.
+
+```json
+"__groups__"": {
+  "1": ["single_string_field_twoandhalf"],
+  "single_group": [
+    "single_number_field_one",
+    "single_string_field_two",
+    "single_model_field_six",
+    "single_file_field_six",
+  ],
+  "newbbdd_group": [
+    "newbbdd_number_field_seven",
+    "newbbdd_string_field_eight",
+    "single_textarea_field_four",
+    "newbbdd_model_field_eightandhalf",
+  ],
+  "multiple_group": [
+    "multiple_number_field_nine",
+    "multiple_string_field_ten",
+    "multiple_radio_field_eleven",
+    "multiple_textarea_field_twelwe",
+    "multiple_model_field_thirteen",
+  ],
+},
+```
+
+### Info
+
+En "**info**" se almacena la descripción de cada campo, que se mostrará en el formulario al lado del icono de información '?' que se mostrará al lado de cada label del campo.
+
+```json
+"__info__"": {
+  "single_number_field_one": "This is a single_number field one",
+  "single_string_field_two": "This is a single_string field two",
+  "single_radio_field_three_withoutgroup": "This is a single_radio field",
+  "single_textarea_field_four": "This is a single_textarea field",
+  "single_model_field_six": "This is a single_model field",
+  "single_file_field_six": "This is a file. Extensions allowed: pdf,zip,jpg,png",
+  "newbbdd_number_field_seven": "This is a newbbdd_number field",
+  "newbbdd_string_field_eight": "This is a newbbdd_string field",
+  "multiple_number_field_nine": "This is a multiple_number field",
+  "multiple_string_field_ten": "This is a multiple_string field",
+  "multiple_radio_field_eleven": "This is a multiple_radio field",
+  "multiple_textarea_field_twelwe": "This is a multiple_textarea field",
+  "multiple_model_field_thirteen": "This is a multiple_model field",
+},
+```
+
+### Validation
+
+En "**validation**" se indicará el tipo de validación que se aplicará al campo. Se puede indicar que sea obligatorio. Se puede indicar el tipo de validación que se aplicará, pudiendo ser validaciones complejas como "nif" o "tarjeta".
+
+```json
+"__validations__": {
+  "single_number_field_one": {
+    "maxlength: 2",
+    "required: true",
+    "tovalidate": "number"
+  },
+  "single_string_field_two": {
+    "required": true,
+    "tovalidate": "alpha"
+  },
+  "single_radio_field_three_withoutgroup": {
+    "required": true
+  },
+  "single_textarea_field_four": {
+    "required": true,
+    "tovalidate": "alpha"
+  },
+  "single_file_field_six": {
+    "required": true,
+    "tovalidate": "file:pdf,zip,jpg,png"
+  },
+  "newbbdd_number_field_seven": {
+    "maxlength": 5,
+    "required": true,
+    "tovalidate": "number"
+  },
+  "newbbdd_string_field_eight": {
+    "required": true,
+    "tovalidate": "alpha"
+  },
+  "multiple_number_field_nine": {
+    "maxlength": 2,
+    "required": true,
+    "tovalidate": "number"
+  },
+  "multiple_string_field_ten": {
+    "required": true,
+    "tovalidate": "alpha"
+  },
+  "multiple_radio_field_eleven": {
+    "required": true,
+  },
+  "multiple_textarea_field_twelwe": {
+    "required": true,
+    "tovalidate": "alpha"
+  }
+}
+```
+
 ## Linting and formatting
 
 To scan the project for linting and formatting errors, run

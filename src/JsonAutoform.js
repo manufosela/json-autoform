@@ -50,9 +50,12 @@ export class JsonAutoform extends LitElement {
     this.autoSave = autoSave;
 
     this.model = {};
+    this.labels = {};
+    this.types = {};
     this.groups = {};
     this.info = {};
-    this.types = {};
+    this.validations = {};
+
     this.data = {};
     this.user = null;
 
@@ -60,25 +63,23 @@ export class JsonAutoform extends LitElement {
 
     this.fnTypes = {
       single: this._drawSingleFields.bind(this),
-      newbbdd: this._drawNewBbddFields.bind(this),
       multiple: this._drawMultipleFields.bind(this),
     };
 
     this.fnFormTypes = {
-      string: this._createInputField.bind(this),
-      password: this._createInputField.bind(this),
+      input: this._createInputField.bind(this),
       textarea: this._createTextareaField.bind(this),
       file: this._createFileField.bind(this),
-      number: this._createInputField.bind(this),
-      date: this._createInputField.bind(this),
       radio: this._createRadioButtonField.bind(this),
       checkbox: this._createCheckboxField.bind(this),
       model: this._createModelFields.bind(this),
+      select: this._createSelectField.bind(this),
     };
 
     this.linkStyles =
       '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" />';
 
+    // Used by ValidateForm
     this.htmlInputAttributes = [
       'maxlength',
       'minlength',
@@ -124,6 +125,7 @@ export class JsonAutoform extends LitElement {
       });
       document.dispatchEvent(componentCreatedEvent);
     });
+
     document.addEventListener('json-fill-data', this._fillData.bind(this));
   }
 
@@ -182,6 +184,16 @@ export class JsonAutoform extends LitElement {
     return container;
   }
 
+  _getSchemaModel(modelPathName) {
+    const paths = modelPathName.split('/');
+    if (paths[0] === '') paths.shift();
+    let model = this.schema;
+    paths.forEach(path => {
+      model = model[path];
+    });
+    return model;
+  }
+
   /** DRAW TYPES */
   _insertField(field, container, where = 'inside') {
     this.kk = null;
@@ -202,22 +214,25 @@ export class JsonAutoform extends LitElement {
     container = this._getContainer(modelElementName),
     where = 'inside'
   ) {
-    const field = this.fnFormTypes[fieldFormType](
-      modelElementName,
-      fieldFormType
-    );
+    const fieldFormTypeCleaned = fieldFormType.split(':')[0];
+    const fnFormType = Object.keys(this.fnFormTypes).includes(
+      fieldFormTypeCleaned
+    )
+      ? this.fnFormTypes[fieldFormTypeCleaned]
+      : this.fnFormTypes.input;
+    const field = fnFormType(modelElementName, fieldFormType);
     this._insertField(field, container, where);
     this._createInfoIcon(field, modelElementName);
   }
 
-  _drawNewBbddFields(
-    fieldFormType,
-    modelElementName,
-    container = this._getContainer(modelElementName),
-    where = 'inside'
-  ) {
-    this._drawSingleFields(fieldFormType, modelElementName, container, where);
-  }
+  // _drawNewBbddFields(
+  //   fieldFormType,
+  //   modelElementName,
+  //   container = this._getContainer(modelElementName),
+  //   where = 'inside'
+  // ) {
+  //   this._drawSingleFields(fieldFormType, modelElementName, container, where);
+  // }
 
   _drawMultipleFields(
     fieldFormType,
@@ -225,10 +240,13 @@ export class JsonAutoform extends LitElement {
     container = this._getContainer(modelElementName),
     where = 'inside'
   ) {
-    const field = this.fnFormTypes[fieldFormType](
-      modelElementName,
-      fieldFormType
-    );
+    const fieldFormTypeCleaned = fieldFormType.split(':')[0];
+    const fnFormType = Object.keys(this.fnFormTypes).includes(
+      fieldFormTypeCleaned
+    )
+      ? this.fnFormTypes[fieldFormTypeCleaned]
+      : this.fnFormTypes.input;
+    const field = fnFormType(modelElementName, fieldFormType);
     const divLayer = this._createDivLayer(
       modelElementName,
       'multiple_container'
@@ -242,8 +260,8 @@ export class JsonAutoform extends LitElement {
     }
   }
 
-  /** DRAW FIELDS FORM */
-  _drawFormMainFieldGroups() {
+  /** DRAWING FORM */
+  _drawFieldsetsFormGroups() {
     const { groups } = this;
     if (groups) {
       this.groupsKeys = Object.keys(groups);
@@ -265,18 +283,20 @@ export class JsonAutoform extends LitElement {
   }
 
   _drawFormFieldsModel() {
-    const { model } = this;
+    const { model, types } = this;
     this.allGroupValues = this._getAllGroupValues();
     Object.keys(model).forEach(modelElementName => {
-      const [fieldType, fieldFormType] = model[modelElementName].split('_');
-      this.fnTypes[fieldType](fieldFormType, modelElementName);
+      const field = model[modelElementName];
+      const fieldSchemaType = types[modelElementName];
+      console.log(fieldSchemaType, field, modelElementName);
+      this.fnTypes[fieldSchemaType](field, modelElementName);
     });
   }
 
   _drawFormScaffolding() {
     this.container.innerHTML = '';
     this.container.appendChild(this.bocadillo);
-    this._drawFormMainFieldGroups();
+    this._drawFieldsetsFormGroups();
     this._drawFormFieldsModel();
     this.validateForm = new ValidateForm(this.isFormUpdated, {
       scope: this.shadowRoot,
@@ -285,11 +305,13 @@ export class JsonAutoform extends LitElement {
 
   /** CREATE FORM ELEMENTS */
   _createLabel(modelElementName) {
-    this.kk = 'kk';
+    this._null = null;
     const label = document.createElement('label');
     label.setAttribute('for', modelElementName);
     label.classList.add('main-form-label');
-    label.innerHTML = modelElementName.replace(/_/g, ' ');
+    label.innerHTML = this.labels[modelElementName]
+      ? this.labels[modelElementName]
+      : modelElementName.replace(/_/g, ' ');
     return label;
   }
 
@@ -301,25 +323,25 @@ export class JsonAutoform extends LitElement {
     input.setAttribute('id', this._getNewId(modelElementName));
     input.setAttribute('value', '');
     input.classList.add('form-control');
-    return this._addValidation(input, modelElementName);
+    return this._addvalidations(input, modelElementName);
   }
 
   _createRichInputfile(modelElementName) {
-    const validation = this.validation[modelElementName];
+    const validations = this.validations[modelElementName];
     const elemAttributes = [
       `id="${modelElementName}"`,
       `name="${modelElementName}"`,
     ];
-    if (validation) {
-      const validationKeys = Object.keys(validation);
-      validationKeys.forEach(validationKey => {
-        const validationValue = validation[validationKey];
-        if (validationKey === 'required') {
-          elemAttributes.push(`data-required="${validationValue}"`);
+    if (validations) {
+      const validationsKeys = Object.keys(validations);
+      validationsKeys.forEach(validationsKey => {
+        const validationsValue = validations[validationsKey];
+        if (validationsKey === 'required') {
+          elemAttributes.push(`data-required="${validationsValue}"`);
         }
-        if (validationKey === 'tovalidate') {
+        if (validationsKey === 'tovalidate') {
           elemAttributes.push(
-            `allowed-extensions="${String(validationValue).replace(
+            `allowed-extensions="${String(validationsValue).replace(
               'file:',
               ''
             )}"`
@@ -341,7 +363,7 @@ export class JsonAutoform extends LitElement {
     textarea.setAttribute('rows', '5');
     textarea.innerHTML = '';
     this._addTextareaEvents(textarea, modelElementName);
-    return this._addValidation(textarea, modelElementName);
+    return this._addvalidations(textarea, modelElementName);
   }
 
   _createRadioButton(modelElementName, radioName = modelElementName, row) {
@@ -353,7 +375,7 @@ export class JsonAutoform extends LitElement {
     radio.setAttribute('value', modelElementName);
     radio.setAttribute('id', this._getNewId(radioName));
     this._addInputEvents(radio, modelElementName);
-    return this._addValidation(radio, modelElementName);
+    return this._addvalidations(radio, modelElementName);
   }
 
   _createCheckbox(modelElementName) {
@@ -363,11 +385,11 @@ export class JsonAutoform extends LitElement {
     checkbox.setAttribute('name', modelElementName);
     checkbox.setAttribute('id', this._getNewId(modelElementName));
     this._addInputEvents(checkbox, modelElementName);
-    return this._addValidation(checkbox, modelElementName);
+    return this._addvalidations(checkbox, modelElementName);
   }
 
   _createOptions(select, model) {
-    this.kk = 'kk';
+    this._null = null;
     const optionDefault = document.createElement('option');
     optionDefault.setAttribute('value', '');
     optionDefault.innerHTML = 'Selecciona una opción';
@@ -381,12 +403,12 @@ export class JsonAutoform extends LitElement {
   }
 
   _createSelect(modelElementName) {
-    this.kk = 'kk';
+    this._null = null;
     const select = document.createElement('select');
     select.setAttribute('name', modelElementName);
     select.setAttribute('id', this._getNewId(modelElementName));
     select.classList.add('form-control');
-    return this._addValidation(select, modelElementName);
+    return this._addvalidations(select, modelElementName);
   }
 
   _createInfoIcon(element, modelElementName) {
@@ -466,7 +488,8 @@ export class JsonAutoform extends LitElement {
 
   _createRadioButtonField(modelElementName) {
     const label = this._createLabel(modelElementName);
-    const radiobuttons = this.schema[modelElementName];
+    const pathModel = this.model[modelElementName].split(':')[1];
+    const radiobuttons = this._getSchemaModel(pathModel);
     const divLayer = this._createDivLayer(modelElementName);
     divLayer.classList.add('form-group');
     divLayer.appendChild(label);
@@ -495,7 +518,8 @@ export class JsonAutoform extends LitElement {
 
   _createCheckboxField(modelElementName) {
     const label = this._createLabel(modelElementName);
-    const checkboxes = this.schema[modelElementName];
+    const model = this.model[modelElementName].split(':')[1];
+    const checkboxes = this.schema[model];
     const divLayer = this._createDivLayer(modelElementName);
     divLayer.classList.add('form-group');
     divLayer.appendChild(label);
@@ -514,11 +538,13 @@ export class JsonAutoform extends LitElement {
     return divLayer;
   }
 
-  _createSelectField(model, modelElementName) {
+  _createSelectField(modelElementName) {
     const label = this._createLabel(modelElementName);
     const select = this._createSelect(modelElementName);
+    const pathModel = this.model[modelElementName].split(':')[1];
+    const radiobuttonsSchema = this._getSchemaModel(pathModel);
     this._addSelectEvents(select, modelElementName);
-    this._createOptions(select, model);
+    this._createOptions(select, radiobuttonsSchema);
     const divLayer = this._createDivLayer(modelElementName);
     divLayer.classList.add('form-group');
     divLayer.appendChild(label);
@@ -527,31 +553,21 @@ export class JsonAutoform extends LitElement {
   }
 
   _createModelFields(modelElementName) {
-    let modelFormElement = null;
-    if (Array.isArray(this.schema[modelElementName])) {
-      const select = this._createSelectField(
-        this.schema[modelElementName],
-        modelElementName,
-        true
-      );
-      modelFormElement = select;
-    } else {
-      const fieldset = this._createFieldset(modelElementName);
-      const jsonAutoform = document.createElement('json-autoform');
-      jsonAutoform.setAttribute('name', modelElementName);
-      jsonAutoform.setAttribute('model-name', modelElementName);
-      jsonAutoform.setAttribute('id', this._getNewId(modelElementName));
-      jsonAutoform.setAttribute('level', this.level + 1);
-      this.addEventListener('component-created', e => {
-        // console.log('component-created', e.detail);
-        if (e.detail.componentName.toLowerCase() === 'json-autoform') {
-          jsonAutoform.setSchema(this.schema);
-        }
-      });
-      fieldset.appendChild(jsonAutoform);
-      modelFormElement = fieldset;
-    }
-    return modelFormElement;
+    const fieldset = this._createFieldset(modelElementName);
+    const jsonAutoform = document.createElement('json-autoform');
+    const model = this.model[modelElementName].split(':')[1];
+    jsonAutoform.setAttribute('name', modelElementName);
+    jsonAutoform.setAttribute('model-name', modelElementName);
+    jsonAutoform.setAttribute('id', this._getNewId(modelElementName));
+    jsonAutoform.setAttribute('level', this.level + 1);
+    this.addEventListener('component-created', e => {
+      // console.log('component-created', e.detail);
+      if (e.detail.componentName.toLowerCase() === 'json-autoform') {
+        jsonAutoform.setSchema(this.schema[model]);
+      }
+    });
+    fieldset.appendChild(jsonAutoform);
+    return fieldset;
   }
 
   /** CREATE ADD BUTTONS */
@@ -572,7 +588,8 @@ export class JsonAutoform extends LitElement {
   _addNewElement(modelElementName, e) {
     e.preventDefault();
     const { parentElement } = e.target.parentElement;
-    const [fieldType, fieldFormType] = this.model[modelElementName].split('_');
+    const fieldFormType = this.model[modelElementName];
+    const fieldType = this.types[modelElementName];
     this.fnTypes[fieldType](
       fieldFormType,
       modelElementName,
@@ -640,10 +657,16 @@ export class JsonAutoform extends LitElement {
   setSchema(schema) {
     this.schema = schema;
     // console.log(`modelName: ${this.modelName}`);
-    this.model = this.schema[this.modelName].__model__;
-    this.groups = this.schema[this.modelName].__groups__;
-    this.info = this.schema[this.modelName].__info__;
-    this.validation = this.schema[this.modelName].__validation__;
+    this.model = this.schema[this.modelName].__model__ || null;
+    this.types = this.schema[this.modelName].__types__ || null;
+    this.labels = this.schema[this.modelName].__labels__ || {};
+    this.groups = this.schema[this.modelName].__groups__ || {};
+    this.info = this.schema[this.modelName].__info__ || {};
+    this.validations = this.schema[this.modelName].__validations__ || {};
+
+    if (!this.models && !this.types) {
+      throw new Error('No schema model and/or schema types found');
+    }
 
     this.generateForm();
   }
@@ -748,17 +771,17 @@ export class JsonAutoform extends LitElement {
     this._createInfoIcon(label, '');
   }
 
-  _addValidation(formElement, modelElementName) {
+  _addvalidations(formElement, modelElementName) {
     const element = formElement;
-    const validation = this.validation[modelElementName];
-    if (validation) {
-      const validationKeys = Object.keys(validation);
-      validationKeys.forEach(validationKey => {
-        const validationValue = validation[validationKey];
-        if (this.htmlInputAttributes.includes(validationKey)) {
-          element.setAttribute(validationKey, validationValue);
+    const validations = this.validations[modelElementName];
+    if (validations) {
+      const validationsKeys = Object.keys(validations);
+      validationsKeys.forEach(validationsKey => {
+        const validationsValue = validations[validationsKey];
+        if (this.htmlInputAttributes.includes(validationsKey)) {
+          element.setAttribute(validationsKey, validationsValue);
         } else {
-          element.dataset[validationKey] = validationValue;
+          element.dataset[validationsKey] = validationsValue;
         }
       });
     }

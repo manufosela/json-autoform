@@ -17,7 +17,7 @@
     "storybook:build": "npm run analyze -- --exclude dist && build-storybook"
   },
   "dependencies": {
-    "automatic_form_validation": "^1.5.0",
+    "automatic_form_validation": "^1.5.1",
     "lit": "^2.0.2",
     "rich-inputfile": "^1.2.0"
   },

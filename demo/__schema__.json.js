@@ -1,11 +1,73 @@
 export default {
   canonical: {
+    __model__: {},
+    __types__: {},
+    __labels__: {},
     __groups__: {},
     __info__: {},
-    __model__: {},
-    __validation__: {},
+    __validations__: {},
   },
   demo: {
+    __model__: {
+      single_number_field_one: 'number',
+      single_string_field_two: 'string',
+      single_string_field_twoandhalf: 'string',
+      single_radio_field_three_withoutgroup:
+        'radio:single_radio_field_three_withoutgroup',
+      single_textarea_field_four: 'textarea',
+      single_file_field_six: 'file',
+      single_checkbox_field_five_withoutgroup_neitherinfo: 'checkbox',
+      single_model_field_six: 'model:single_model_field_six',
+      multiple_number_field_seven: 'number',
+      newbbdd_string_field_eight: 'string',
+      newbbdd_model_field_eightandhalf:
+        'select:newbbdd_model_field_eightandhalf',
+      multiple_number_field_nine: 'number',
+      multiple_string_field_ten: 'string',
+      multiple_radio_field_eleven:
+        'radio:single_radio_field_three_withoutgroup',
+      multiple_textarea_field_twelwe: 'textarea',
+      multiple_model_field_thirteen: 'model:multiple_model_field_thirteen',
+    },
+    __labels__: {
+      single_number_field_one: 'Single number field one',
+      single_string_field_two: 'Single string field two',
+      single_string_field_twoandhalf: 'Single string field two and half',
+      single_radio_field_three_withoutgroup:
+        'Single radio field three without group',
+      single_textarea_field_four: 'Single textarea field four',
+      single_file_field_six: 'Single file field six',
+      single_checkbox_field_five_withoutgroup_neitherinfo:
+        'Single checkbox field five without group neither info',
+      single_model_field_six: 'Single model field six',
+      newbbdd_number_field_seven: 'Newbbdd number field seven',
+      newbbdd_string_field_eight: 'Newbbdd string field eight',
+      newbbdd_model_field_eightandhalf: 'Newbbdd model field eight and half',
+      multiple_number_field_nine: 'Multiple number field nine',
+      multiple_string_field_ten: 'Multiple string field ten',
+      multiple_radio_field_eleven: 'Multiple radio field eleven',
+      multiple_textarea_field_twelwe: 'Multiple textarea field twelwe',
+      multiple_model_field_thirteen: 'Multiple model field thirteen',
+    },
+    __types__: {
+      single_number_field_one: 'single',
+      single_string_field_two: 'single',
+      single_string_field_twoandhalf: 'single',
+      single_radio_field_three_withoutgroup: 'single',
+      single_textarea_field_four: 'single',
+      single_file_field_six: 'single',
+      single_checkbox_field_five_withoutgroup_neitherinfo: 'single',
+      single_model_field_six: 'single',
+      newbbdd_number_field_seven: 'single',
+      newbbdd_string_field_eight: 'single',
+      newbbdd_model_field_eightandhalf: 'single',
+      multiple_number_field_nine: 'multiple',
+      multiple_string_field_ten: 'multiple',
+      multiple_radio_field_eleven: 'multiple',
+      multiple_textarea_field_twelwe: 'multiple',
+      multiple_model_field_thirteen: 'multiple',
+      multiple_number_field_seven: 'multiple',
+    },
     __groups__: {
       1: ['single_string_field_twoandhalf'],
       single_group: [
@@ -15,7 +77,7 @@ export default {
         'single_file_field_six',
       ],
       newbbdd_group: [
-        'newbbdd_number_field_seven',
+        'multiple_number_field_seven',
         'newbbdd_string_field_eight',
         'single_textarea_field_four',
         'newbbdd_model_field_eightandhalf',
@@ -36,7 +98,7 @@ export default {
       single_textarea_field_four: 'info about single_textarea field four',
       single_model_field_six: 'info about single_model field six',
       single_file_field_six: 'extension allowed: pdf,zip,jpg,png',
-      newbbdd_number_field_seven: 'info about newbbdd_number field seven',
+      multiple_number_field_seven: 'info about newbbdd_number field seven',
       newbbdd_string_field_eight: 'info about newbbdd_string field eight',
       multiple_number_field_nine: 'info about multiple_number field nine',
       multiple_string_field_ten: 'info about multiple_string field ten',
@@ -45,25 +107,8 @@ export default {
         'info about multiple_textarea field twelwe',
       multiple_model_field_thirteen: 'info about multiple_model field thirteen',
     },
-    __model__: {
-      single_number_field_one: 'single_number',
-      single_string_field_two: 'single_string',
-      single_string_field_twoandhalf: 'single_string',
-      single_radio_field_three_withoutgroup: 'single_radio',
-      single_textarea_field_four: 'single_textarea',
-      single_file_field_six: 'single_file',
-      single_checkbox_field_five_withoutgroup_neitherinfo: 'single_checkbox',
-      single_model_field_six: 'single_model',
-      newbbdd_number_field_seven: 'newbbdd_number',
-      newbbdd_string_field_eight: 'newbbdd_string',
-      newbbdd_model_field_eightandhalf: 'newbbdd_model',
-      multiple_number_field_nine: 'multiple_number',
-      multiple_string_field_ten: 'multiple_string',
-      multiple_radio_field_eleven: 'multiple_radio',
-      multiple_textarea_field_twelwe: 'multiple_textarea',
-      multiple_model_field_thirteen: 'multiple_model',
-    },
-    __validation__: {
+
+    __validations__: {
       single_number_field_one: {
         maxlength: 2,
         required: true,
@@ -84,7 +129,7 @@ export default {
         required: true,
         tovalidate: 'file:pdf,zip,jpg,png',
       },
-      newbbdd_number_field_seven: {
+      multiple_number_field_seven: {
         maxlength: 5,
         required: true,
         tovalidate: 'number',
@@ -112,13 +157,21 @@ export default {
     },
   },
   single_model_field_six: {
+    __model__: {
+      submodel_single_string_field: 'string',
+      submodel_single_textarea_field: 'textarea',
+    },
+    __labels__: {
+      submodel_single_string_field: 'Submodel single string field',
+      submodel_single_textarea_field: 'Submodel single textarea field',
+    },
+    __types__: {
+      submodel_single_string_field: 'single',
+      submodel_single_textarea_field: 'single',
+    },
     __groups__: {},
     __info__: {},
-    __model__: {
-      submodel_single_string_field: 'single_string',
-      submodel_single_textarea_field: 'single_textarea',
-    },
-    __validation__: {},
+    __validations__: {},
   },
   newbbdd_model_field_eightandhalf: [
     'value one',
@@ -137,13 +190,23 @@ export default {
     'radio value six',
   ],
   multiple_model_field_thirteen: {
+    __model__: {
+      submodel_multiple_number_field: 'number',
+      submodel_multiple_string_field: 'string',
+      submodel_multiple_textarea_field: 'textarea',
+    },
+    __types__: {
+      submodel_multiple_number_field: 'multiple',
+      submodel_multiple_string_field: 'multiple',
+      submodel_multiple_textarea_field: 'multiple',
+    },
+    __labels__: {
+      submodel_multiple_number_field: 'Multiple number field thirteen',
+      submodel_multiple_string_field: 'Multiple string field thirteen',
+      submodel_multiple_textarea_field: 'Multiple textarea field thirteen',
+    },
     __groups__: {},
     __info__: {},
-    __model__: {
-      submodel_multiple_number_field: 'multiple_number',
-      submodel_multiple_string_field: 'multiple_string',
-      submodel_multiple_textarea_field: 'multiple_textarea',
-    },
-    __validation__: {},
+    __validations__: {},
   },
 };

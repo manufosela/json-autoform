@@ -7,7 +7,7 @@ export const jsonAutoformStyles = css`
   }
 
   fieldset {
-    border: var(--json-autoform-fieldset-border, 1px solid #ccc)!important;
+    border: var(--json-autoform-fieldset-border, 1px solid #ccc) !important;
     border-radius: var(--json-autoform-border-radius, 1rem);
     margin: var(--json-autoform-margin, 1rem);
     padding: var(--json-autoform-padding, 1rem);
@@ -21,10 +21,10 @@ export const jsonAutoformStyles = css`
     padding: var(--json-autoform-label-padding, 0);
     margin: var(--json-autoform-label-margin, 0.5rem 0 0 0);
     font-size: var(--json-autoform-label-font-size, 1rem);
-    font-weight: var(--json-autoform-label-font-weight, bold);  
+    font-weight: var(--json-autoform-label-font-weight, bold);
     color: var(--json-autoform-label-color, #000);
   }
-  
+
   .form-main-label {
     grid-area: 1 / 2 / 1 / 3;
   }
@@ -113,7 +113,8 @@ export const jsonAutoformStyles = css`
 
   .btn {
     display: inline-block;
-    font-weight: var(--json-autoform-btn-font-weight, 400;
+    grid-area: 2/3;
+    font-weight: var(--json-autoform-btn-font-weight, 400);
     line-height: var(--json-autoform-btn-line-height, 1.5);
     color: var(--json-autoform-btn-color, #212529);
     text-align: center;
@@ -125,6 +126,7 @@ export const jsonAutoformStyles = css`
     user-select: none;
     background-color: var(--json-autoform-btn-background-color, transparent);
     border: var(--json-autoform-btn-border, 1px solid transparent);
+    margin: 0 1rem;
     padding: var(--json-autoform-btn-padding, 0.375rem 0.75rem);
     font-size: var(--json-autoform-btn-font-size, 1rem);
     border-radius: var(--json-autoform-btn-border-radius, 0.25rem);
@@ -135,7 +137,10 @@ export const jsonAutoformStyles = css`
 
   .btn-primary {
     color: #fff;
-    background-color: var(--json-autoform-btn-primary-background-color, #0d6efd);
+    background-color: var(
+      --json-autoform-btn-primary-background-color,
+      #0d6efd
+    );
     border-color: var(--json-autoform-btn-primary-border-color, #0d6efd);
     grid-area: 2 / 3 / 2 / 3;
     margin-left: var(--json-autoform-btn-primary-margin-left, 1rem);
