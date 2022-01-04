@@ -553,16 +553,17 @@ export class JsonAutoform extends LitElement {
   }
 
   _createModelFields(modelElementName) {
+    const newId = this._getNewId(modelElementName);
     const fieldset = this._createFieldset(modelElementName);
     const jsonAutoform = document.createElement('json-autoform');
     const model = this.model[modelElementName].split(':')[1];
     jsonAutoform.setAttribute('name', modelElementName);
     jsonAutoform.setAttribute('model-name', modelElementName);
-    jsonAutoform.setAttribute('id', this._getNewId(modelElementName));
+    jsonAutoform.setAttribute('id', newId);
     jsonAutoform.setAttribute('level', this.level + 1);
-    this.addEventListener('component-created', e => {
-      // console.log('component-created', e.detail);
-      if (e.detail.componentName.toLowerCase() === 'json-autoform') {
+    this.addEventListener('wc-ready', e => {
+      // console.log('wc-ready', e.detail);
+      if (e.detail.id === newId) {
         jsonAutoform.setSchema(this.schema[model]);
       }
     });
