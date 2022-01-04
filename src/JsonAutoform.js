@@ -561,7 +561,7 @@ export class JsonAutoform extends LitElement {
     jsonAutoform.setAttribute('model-name', modelElementName);
     jsonAutoform.setAttribute('id', newId);
     jsonAutoform.setAttribute('level', this.level + 1);
-    this.addEventListener('wc-ready', e => {
+    document.addEventListener('wc-ready', e => {
       // console.log('wc-ready', e.detail);
       if (e.detail.id === newId) {
         jsonAutoform.setSchema(this.schema[model]);
