@@ -316,7 +316,7 @@ export class JsonAutoform extends LitElement {
   }
 
   _createInput(modelElementName, fType = 'text') {
-    const fieldType = fType === 'string' ? 'text' : fType;
+    const fieldType = fType;
     const input = document.createElement('input');
     input.setAttribute('type', fieldType);
     input.setAttribute('name', modelElementName);
