@@ -556,7 +556,6 @@ export class JsonAutoform extends LitElement {
     const newId = this._getNewId(modelElementName);
     const fieldset = this._createFieldset(modelElementName);
     const jsonAutoform = document.createElement('json-autoform');
-    const model = this.model[modelElementName].split(':')[1];
     jsonAutoform.setAttribute('name', modelElementName);
     jsonAutoform.setAttribute('model-name', modelElementName);
     jsonAutoform.setAttribute('id', newId);
@@ -564,7 +563,7 @@ export class JsonAutoform extends LitElement {
     document.addEventListener('wc-ready', e => {
       // console.log('wc-ready', e.detail);
       if (e.detail.id === newId) {
-        jsonAutoform.setSchema(this.schema[model]);
+        jsonAutoform.setSchema(this.schema);
       }
     });
     fieldset.appendChild(jsonAutoform);
