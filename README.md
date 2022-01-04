@@ -75,25 +75,50 @@ Tiene la siguiente estructura:
 
 ```json
 "nombre_formulario"": {
-  "__model__": {},
+  "__fieldTypes__": {},
+  "__modelTypes__": {},
   "__labels__": {},
-  "__types__": {},
   "__groups__": {},
   "__info__": {},
   "__validations__": {},
 }
 ```
 
-### Model
+### Model types
 
-En "**model**" se indica de qué tipo será cada campo del formulario. Podemos elegir entre los tipos de campos de formulario: "text", "number", "file", "radio", "checkbox", "date"... Además de "select" y "textarea".
+En "\***\*modelTypes\*\***" se indica si el campo es único o multiple (se puede repetir). Los valores posibles son "single" y "multiple". En caso de no especificarse, por defecto es "single".
+
+```json
+"__modelTypes__": {
+  "single_number_field_one": "single",
+  "single_string_field_two": "single",
+  "single_string_field_twoandhalf": "single",
+  "single_radio_field_three_withoutgroup": "single",
+  "single_textarea_field_four": "single",
+  "single_file_field_six": "single",
+  "single_checkbox_field_five_withoutgroup_neitherinfo": "single",
+  "single_model_field_six": "single",
+  "newbbdd_number_field_seven": "single",
+  "newbbdd_string_field_eight": "single",
+  "newbbdd_model_field_eightandhalf": "single",
+  "multiple_number_field_nine": "multiple",
+  "multiple_string_field_ten": "multiple",
+  "multiple_radio_field_eleven": "multiple",
+  "multiple_textarea_field_twelwe": "multiple",
+  "multiple_model_field_thirteen": "multiple"
+},
+```
+
+### Field types
+
+En "**fieldTypes**" se indica de qué tipo será cada campo del formulario. Podemos elegir entre los tipos de campos de formulario: "text", "number", "file", "radio", "checkbox", "date"... Además de "select", "textarea" y "datalist".
 En caso de que el campo sea de tipo "select", "radio" y "checkbox"(opcionalmente), se debe indicar seguido de dos puntos el id que irá en el esquema que contiene los "options".
 En caso de querer que el campo sea otro modelo, se indica "model" seguido de dos puntos y el nombre del modelo, que debe estar definido en el esquema.
 El id de cada campo se usará como nombre del campo en el formulario.
 En la etiqueta _label_ se mostrará sin '\_' que serán reemplazados por ' ' en el nombre del campo en caso de que no exista en el esquema dentro de '**labels**'.
 
 ```json
-"__model__": {
+"__fieldTypes__": {
   "single_number_field_one": "number",
   "single_string_field_two": "string",
   "single_string_field_twoandhalf": "string",
@@ -136,31 +161,6 @@ En "**labels**" se indican las etiquetas de los campos del formulario. Si no est
   "multiple_textarea_field_twelwe": "Multiple textarea field twelwe",
   "multiple_model_field_thirteen": "Multiple model field thirteen"
 }
-```
-
-### Types
-
-En "**types**" se indica si el campo es único o se repite. Los valores posibles son "single" y "multiple". En caso de no especificarse, por defecto es "single".
-
-```json
-"__types__": {
-  "single_number_field_one": "single",
-  "single_string_field_two": "single",
-  "single_string_field_twoandhalf": "single",
-  "single_radio_field_three_withoutgroup": "single",
-  "single_textarea_field_four": "single",
-  "single_file_field_six": "single",
-  "single_checkbox_field_five_withoutgroup_neitherinfo": "single",
-  "single_model_field_six": "single",
-  "newbbdd_number_field_seven": "single",
-  "newbbdd_string_field_eight": "single",
-  "newbbdd_model_field_eightandhalf": "single",
-  "multiple_number_field_nine": "multiple",
-  "multiple_string_field_ten": "multiple",
-  "multiple_radio_field_eleven": "multiple",
-  "multiple_textarea_field_twelwe": "multiple",
-  "multiple_model_field_thirteen": "multiple"
-},
 ```
 
 ### Groups

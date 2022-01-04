@@ -1,14 +1,14 @@
 export default {
   canonical: {
-    __model__: {},
-    __types__: {},
+    __modelTypes__: {},
+    __fieldTypes__: {},
     __labels__: {},
     __groups__: {},
     __info__: {},
     __validations__: {},
   },
   demo: {
-    __model__: {
+    __fieldTypes__: {
       single_number_field_one: 'number',
       single_text_field_two: 'text',
       single_text_field_twoandhalf: 'password',
@@ -29,6 +29,25 @@ export default {
       multiple_textarea_field_twelwe: 'textarea',
       multiple_model_field_thirteen: 'model:multiple_model_field_thirteen',
     },
+    __modelTypes__: {
+      single_number_field_one: 'single',
+      single_text_field_two: 'single',
+      single_text_field_twoandhalf: 'single',
+      single_radio_field_three_withoutgroup: 'single',
+      single_textarea_field_four: 'single',
+      single_file_field_six: 'single',
+      single_checkbox_field_five_withoutgroup_neitherinfo: 'single',
+      single_model_field_six: 'single',
+      newbbdd_number_field_seven: 'single',
+      newbbdd_text_field_eight: 'single',
+      newbbdd_model_field_eightandhalf: 'single',
+      multiple_number_field_nine: 'multiple',
+      multiple_text_field_ten: 'multiple',
+      multiple_radio_field_eleven: 'multiple',
+      multiple_textarea_field_twelwe: 'multiple',
+      multiple_model_field_thirteen: 'multiple',
+      multiple_number_field_seven: 'multiple',
+    },
     __labels__: {
       single_number_field_one: 'Single number field one',
       single_text_field_two: 'Single text field two',
@@ -48,25 +67,6 @@ export default {
       multiple_radio_field_eleven: 'Multiple radio field eleven',
       multiple_textarea_field_twelwe: 'Multiple textarea field twelwe',
       multiple_model_field_thirteen: 'Multiple model field thirteen',
-    },
-    __types__: {
-      single_number_field_one: 'single',
-      single_text_field_two: 'single',
-      single_text_field_twoandhalf: 'single',
-      single_radio_field_three_withoutgroup: 'single',
-      single_textarea_field_four: 'single',
-      single_file_field_six: 'single',
-      single_checkbox_field_five_withoutgroup_neitherinfo: 'single',
-      single_model_field_six: 'single',
-      newbbdd_number_field_seven: 'single',
-      newbbdd_text_field_eight: 'single',
-      newbbdd_model_field_eightandhalf: 'single',
-      multiple_number_field_nine: 'multiple',
-      multiple_text_field_ten: 'multiple',
-      multiple_radio_field_eleven: 'multiple',
-      multiple_textarea_field_twelwe: 'multiple',
-      multiple_model_field_thirteen: 'multiple',
-      multiple_number_field_seven: 'multiple',
     },
     __groups__: {
       1: ['single_text_field_twoandhalf'],
@@ -107,7 +107,6 @@ export default {
         'info about multiple_textarea field twelwe',
       multiple_model_field_thirteen: 'info about multiple_model field thirteen',
     },
-
     __validations__: {
       single_text_field_twoandhalf: {
         tovalidate: 'password',
@@ -137,6 +136,9 @@ export default {
         required: true,
         tovalidate: 'number',
       },
+      newbbdd_model_field_eightandhalf: {
+        required: true,
+      },
       newbbdd_text_field_eight: {
         required: true,
         tovalidate: 'url',
@@ -160,17 +162,17 @@ export default {
     },
   },
   single_model_field_six: {
-    __model__: {
+    __modelTypes__: {
+      submodel_single_text_field: 'single',
+      submodel_single_textarea_field: 'single',
+    },
+    __fieldTypes__: {
       submodel_single_text_field: 'text',
       submodel_single_textarea_field: 'textarea',
     },
     __labels__: {
       submodel_single_text_field: 'Submodel single text field',
       submodel_single_textarea_field: 'Submodel single textarea field',
-    },
-    __types__: {
-      submodel_single_text_field: 'single',
-      submodel_single_textarea_field: 'single',
     },
     __groups__: {},
     __info__: {},
@@ -193,15 +195,15 @@ export default {
     'radio value six',
   ],
   multiple_model_field_thirteen: {
-    __model__: {
-      submodel_multiple_number_field: 'number',
-      submodel_multiple_text_field: 'text',
-      submodel_multiple_textarea_field: 'textarea',
-    },
-    __types__: {
+    __modelTypes__: {
       submodel_multiple_number_field: 'multiple',
       submodel_multiple_text_field: 'multiple',
       submodel_multiple_textarea_field: 'multiple',
+    },
+    __fieldTypes__: {
+      submodel_multiple_number_field: 'number',
+      submodel_multiple_text_field: 'text',
+      submodel_multiple_textarea_field: 'textarea',
     },
     __labels__: {
       submodel_multiple_number_field: 'Multiple number field thirteen',

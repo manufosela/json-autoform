@@ -12,12 +12,12 @@ export class JsonAutoform extends LitElement {
     return {
       id: { type: String },
       /**
-       * @description The name of the model inside the __schema__.
+       * @description The name of the types inside the __schema__.
        * @type {String}
-       * @attribute model-name
+       * @attribute types-name
        * @default ''
        * @example
-       * <json-autoform model-name="user"></json-autoform>
+       * <json-autoform types-name="user"></json-autoform>
        */
       modelName: { type: String, attribute: 'model-name' },
       /**
@@ -35,7 +35,7 @@ export class JsonAutoform extends LitElement {
        * @attribute level
        * @default 0
        * @example
-       * <json-autoform level="1" model-name="user" name="user" show-name="true"></json-autoform>
+       * <json-autoform level="1" types-name="user" name="user" show-name="true"></json-autoform>
        */
       level: { type: Number, reflect: true },
     };
@@ -49,9 +49,9 @@ export class JsonAutoform extends LitElement {
     this.level = level;
     this.autoSave = autoSave;
 
-    this.model = {};
+    this.fieldTypes = {};
     this.labels = {};
-    this.types = {};
+    this.modelTypes = {};
     this.groups = {};
     this.info = {};
     this.validations = {};
@@ -72,8 +72,9 @@ export class JsonAutoform extends LitElement {
       file: this._createFileField.bind(this),
       radio: this._createRadioButtonField.bind(this),
       checkbox: this._createCheckboxField.bind(this),
-      model: this._createModelFields.bind(this),
+      types: this._createModelFields.bind(this),
       select: this._createSelectField.bind(this),
+      datalist: this._createInputDetailsField.bind(this),
     };
 
     this.linkStyles =
@@ -187,14 +188,14 @@ export class JsonAutoform extends LitElement {
   _getSchemaModel(modelPathName) {
     const paths = modelPathName.split('/');
     if (paths[0] === '') paths.shift();
-    let model = this.schema;
+    let types = this.schema;
     paths.forEach(path => {
-      model = model[path];
+      types = types[path];
     });
-    return model;
+    return types;
   }
 
-  /** DRAW TYPES */
+  /** DRAW types */
   _insertField(field, container, where = 'inside') {
     this.kk = null;
     if (where === 'inside') {
@@ -224,15 +225,6 @@ export class JsonAutoform extends LitElement {
     this._insertField(field, container, where);
     this._createInfoIcon(field, modelElementName);
   }
-
-  // _drawNewBbddFields(
-  //   fieldFormType,
-  //   modelElementName,
-  //   container = this._getContainer(modelElementName),
-  //   where = 'inside'
-  // ) {
-  //   this._drawSingleFields(fieldFormType, modelElementName, container, where);
-  // }
 
   _drawMultipleFields(
     fieldFormType,
@@ -283,12 +275,12 @@ export class JsonAutoform extends LitElement {
   }
 
   _drawFormFieldsModel() {
-    const { model, types } = this;
+    const { fieldTypes, modelTypes } = this;
     this.allGroupValues = this._getAllGroupValues();
-    Object.keys(model).forEach(modelElementName => {
-      const field = model[modelElementName];
-      const fieldSchemaType = types[modelElementName];
-      console.log(fieldSchemaType, field, modelElementName);
+    Object.keys(fieldTypes).forEach(modelElementName => {
+      const field = fieldTypes[modelElementName];
+      const fieldSchemaType = modelTypes[modelElementName];
+      // console.log(fieldSchemaType, field, modelElementName);
       this.fnTypes[fieldSchemaType](field, modelElementName);
     });
   }
@@ -388,13 +380,29 @@ export class JsonAutoform extends LitElement {
     return this._addvalidations(checkbox, modelElementName);
   }
 
-  _createOptions(select, model) {
+  _createDatalist(select, types, modelElementName) {
+    this._null = null;
+    const patternMatcher = [];
+    const datalist = document.createElement('datalist');
+    datalist.id = `${modelElementName}-datalist`;
+    types.forEach(item => {
+      const option = document.createElement('option');
+      option.setAttribute('value', item);
+      option.innerHTML = item;
+      datalist.appendChild(option);
+      patternMatcher.push(item);
+    });
+    select.setAttribute('pattern', patternMatcher.join('|'));
+    return datalist;
+  }
+
+  _createOptions(select, types) {
     this._null = null;
     const optionDefault = document.createElement('option');
     optionDefault.setAttribute('value', '');
     optionDefault.innerHTML = 'Selecciona una opción';
     select.appendChild(optionDefault);
-    model.forEach(item => {
+    types.forEach(item => {
       const option = document.createElement('option');
       option.setAttribute('value', item);
       option.innerHTML = item;
@@ -488,7 +496,7 @@ export class JsonAutoform extends LitElement {
 
   _createRadioButtonField(modelElementName) {
     const label = this._createLabel(modelElementName);
-    const pathModel = this.model[modelElementName].split(':')[1];
+    const pathModel = this.fieldTypes[modelElementName].split(':')[1];
     const radiobuttons = this._getSchemaModel(pathModel);
     const divLayer = this._createDivLayer(modelElementName);
     divLayer.classList.add('form-group');
@@ -518,8 +526,8 @@ export class JsonAutoform extends LitElement {
 
   _createCheckboxField(modelElementName) {
     const label = this._createLabel(modelElementName);
-    const model = this.model[modelElementName].split(':')[1];
-    const checkboxes = this.schema[model];
+    const types = this.fieldTypes[modelElementName].split(':')[1];
+    const checkboxes = this.schema[types];
     const divLayer = this._createDivLayer(modelElementName);
     divLayer.classList.add('form-group');
     divLayer.appendChild(label);
@@ -538,10 +546,31 @@ export class JsonAutoform extends LitElement {
     return divLayer;
   }
 
+  _createInputDetailsField(modelElementName) {
+    const label = this._createLabel(modelElementName);
+    const select = this._createInput(modelElementName);
+    select.removeAttribute('type');
+    select.setAttribute('list', `${modelElementName}-datalist`);
+    const pathModel = this.fieldTypes[modelElementName].split(':')[1];
+    const selectSchema = this._getSchemaModel(pathModel);
+    this._addSelectEvents(select, modelElementName);
+    const datalist = this._createDatalist(
+      select,
+      selectSchema,
+      modelElementName
+    );
+    const divLayer = this._createDivLayer(modelElementName);
+    divLayer.classList.add('form-group');
+    divLayer.appendChild(label);
+    divLayer.appendChild(select);
+    divLayer.appendChild(datalist);
+    return divLayer;
+  }
+
   _createSelectField(modelElementName) {
     const label = this._createLabel(modelElementName);
     const select = this._createSelect(modelElementName);
-    const pathModel = this.model[modelElementName].split(':')[1];
+    const pathModel = this.fieldTypes[modelElementName].split(':')[1];
     const radiobuttonsSchema = this._getSchemaModel(pathModel);
     this._addSelectEvents(select, modelElementName);
     this._createOptions(select, radiobuttonsSchema);
@@ -557,7 +586,7 @@ export class JsonAutoform extends LitElement {
     const fieldset = this._createFieldset(modelElementName);
     const jsonAutoform = document.createElement('json-autoform');
     jsonAutoform.setAttribute('name', modelElementName);
-    jsonAutoform.setAttribute('model-name', modelElementName);
+    jsonAutoform.setAttribute('types-name', modelElementName);
     jsonAutoform.setAttribute('id', newId);
     jsonAutoform.setAttribute('level', this.level + 1);
     document.addEventListener('wc-ready', e => {
@@ -588,15 +617,15 @@ export class JsonAutoform extends LitElement {
   _addNewElement(modelElementName, e) {
     e.preventDefault();
     const { parentElement } = e.target.parentElement;
-    const fieldFormType = this.model[modelElementName];
-    const fieldType = this.types[modelElementName];
+    const fieldFormType = this.fieldTypes[modelElementName];
+    const fieldType = this.modelTypes[modelElementName];
     this.fnTypes[fieldType](
       fieldFormType,
       modelElementName,
       parentElement,
       'last'
     );
-    // console.log(modelElementName, this.model[modelElementName]);
+    // console.log(modelElementName, this.fieldTypes[modelElementName]);
   }
 
   _createAddButton(modelElementName) {
@@ -657,15 +686,15 @@ export class JsonAutoform extends LitElement {
   setSchema(schema) {
     this.schema = schema;
     // console.log(`modelName: ${this.modelName}`);
-    this.model = this.schema[this.modelName].__model__ || null;
-    this.types = this.schema[this.modelName].__types__ || null;
+    this.fieldTypes = this.schema[this.modelName].__fieldTypes__ || null;
+    this.modelTypes = this.schema[this.modelName].__modelTypes__ || null;
     this.labels = this.schema[this.modelName].__labels__ || {};
     this.groups = this.schema[this.modelName].__groups__ || {};
     this.info = this.schema[this.modelName].__info__ || {};
     this.validations = this.schema[this.modelName].__validations__ || {};
 
-    if (!this.models && !this.types) {
-      throw new Error('No schema model and/or schema types found');
+    if (!this.fieldTypes && !this.modelTypes) {
+      throw new Error('No schema fieldTypes and/or schema modelTypes found');
     }
 
     this.generateForm();
@@ -807,7 +836,7 @@ export class JsonAutoform extends LitElement {
   isFormUpdated() {
     const updateEvent = new CustomEvent('form-updated', {
       detail: {
-        model: this.model,
+        types: this.fieldTypes,
       },
     });
     document.dispatchEvent(updateEvent);
