@@ -586,7 +586,7 @@ export class JsonAutoform extends LitElement {
     const fieldset = this._createFieldset(modelElementName);
     const jsonAutoform = document.createElement('json-autoform');
     jsonAutoform.setAttribute('name', modelElementName);
-    jsonAutoform.setAttribute('types-name', modelElementName);
+    jsonAutoform.setAttribute('model-name', modelElementName);
     jsonAutoform.setAttribute('id', newId);
     jsonAutoform.setAttribute('level', this.level + 1);
     document.addEventListener('wc-ready', e => {
