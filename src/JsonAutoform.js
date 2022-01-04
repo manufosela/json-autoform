@@ -72,7 +72,7 @@ export class JsonAutoform extends LitElement {
       file: this._createFileField.bind(this),
       radio: this._createRadioButtonField.bind(this),
       checkbox: this._createCheckboxField.bind(this),
-      types: this._createModelFields.bind(this),
+      model: this._createModelFields.bind(this),
       select: this._createSelectField.bind(this),
       datalist: this._createInputDetailsField.bind(this),
     };

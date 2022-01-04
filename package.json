@@ -3,7 +3,7 @@
   "description": "Webcomponent json-autoform following open-wc recommendations",
   "license": "MIT",
   "author": "manufosela",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "main": "json-autoform.js",
   "module": "json-autoform.js",
   "scripts": {
