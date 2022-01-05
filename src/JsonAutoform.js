@@ -56,7 +56,7 @@ export class JsonAutoform extends LitElement {
     this.info = {};
     this.validations = {};
 
-    this.data = {};
+    this.jsonData = {};
     this.user = null;
 
     this.container = null;
@@ -130,16 +130,16 @@ export class JsonAutoform extends LitElement {
     document.addEventListener('json-fill-data', this._fillData.bind(this));
   }
 
-  _getDataVerified(data) {
+  _getDataVerified(jsonData) {
     const realData = {};
-    if (data) {
-      if (typeof data === 'object') {
-        const dataKeys = Object.keys(data);
+    if (jsonData) {
+      if (typeof jsonData === 'object') {
+        const dataKeys = Object.keys(jsonData);
         dataKeys.forEach(key => {
-          if (typeof data[key] === 'object') {
-            realData[key] = this._getDataVerified(data[key]);
+          if (typeof jsonData[key] === 'object') {
+            realData[key] = this._getDataVerified(jsonData[key]);
           } else {
-            realData[key] = data[key];
+            realData[key] = jsonData[key];
           }
         });
       }
@@ -149,9 +149,9 @@ export class JsonAutoform extends LitElement {
 
   _fillDataValues(myScope = this.shadowRoot) {
     const scope = myScope;
-    const dataKeys = Object.keys(this.data);
+    const dataKeys = Object.keys(this.jsonData);
     dataKeys.forEach(key => {
-      const value = this.data[key];
+      const value = this.jsonData[key];
       if (typeof value === 'object') {
         this._fillDataValues(value);
       } else if (scope.querySelector(`[name="${key}"]`)) {
@@ -166,7 +166,7 @@ export class JsonAutoform extends LitElement {
 
   _fillData(event) {
     if (event.detail.id === this.id) {
-      this.data = this._getDataVerified(event.detail.data);
+      this.jsonData = this._getDataVerified(event.detail.jsonData);
       this._fillDataValues();
     }
   }
@@ -733,7 +733,7 @@ export class JsonAutoform extends LitElement {
   /** ADD EVENTS */
   _addSelectEvents(select, modelElementName) {
     select.addEventListener('change', e => {
-      this.data[modelElementName] = e.target.value;
+      this.jsonData[modelElementName] = e.target.value;
       this.isFormUpdated();
     });
     select.addEventListener('focus', ev => {
@@ -745,14 +745,14 @@ export class JsonAutoform extends LitElement {
 
   _addInputEvents(input, modelElementName) {
     input.addEventListener('blur', e => {
-      this.data[modelElementName] = e.target.value;
+      this.jsonData[modelElementName] = e.target.value;
       this.isFormUpdated();
     });
   }
 
   _addTextareaEvents(textarea, modelElementName) {
     textarea.addEventListener('change', e => {
-      this.data[modelElementName] = e.target.value;
+      this.jsonData[modelElementName] = e.target.value;
       this.isFormUpdated();
     });
   }
@@ -859,7 +859,7 @@ export class JsonAutoform extends LitElement {
 
   saveForm(e) {
     e.preventDefault();
-    this.data = this.getFormData();
+    this.jsonData = this.getFormData();
     const okFieldsNoEmpty = this.validateForm.noEmptyFields();
     const okFieldsValidated = this.validateForm.validateFields();
     if (okFieldsNoEmpty && okFieldsValidated) {
@@ -867,7 +867,7 @@ export class JsonAutoform extends LitElement {
         const saveFormEvent = new CustomEvent('save-form', {
           detail: {
             id: this.id,
-            data: this.data,
+            jsonData: this.jsonData,
           },
         });
         document.dispatchEvent(saveFormEvent);
@@ -876,41 +876,41 @@ export class JsonAutoform extends LitElement {
   }
 
   getFormData() {
-    const data = {};
+    const jsonData = {};
     this.container
       .querySelectorAll(
         'input[type="text"], input[type="number"], select, textarea, rich-inputfile'
       )
       .forEach(input => {
-        if (!data[input.name]) {
-          data[input.name] = input.value;
-        } else if (Array.isArray(data[input.name])) {
-          data[input.name].push(input.value);
+        if (!jsonData[input.name]) {
+          jsonData[input.name] = input.value;
+        } else if (Array.isArray(jsonData[input.name])) {
+          jsonData[input.name].push(input.value);
         } else {
-          const tmp = data[input.name];
-          data[input.name] = [tmp, input.value];
+          const tmp = jsonData[input.name];
+          jsonData[input.name] = [tmp, input.value];
         }
       });
     this.container
       .querySelectorAll('input[type="radio"], input[type="checkbox"]')
       .forEach(input => {
         if (input.checked) {
-          data[input.name] = input.value;
-        } else if (data[input.name] === undefined) {
-          data[input.name] = '';
+          jsonData[input.name] = input.value;
+        } else if (jsonData[input.name] === undefined) {
+          jsonData[input.name] = '';
         }
       });
     this.container.querySelectorAll('json-autoform').forEach(jsonAutoform => {
-      if (!data[jsonAutoform.name]) {
-        data[jsonAutoform.name] = jsonAutoform.getFormData();
-      } else if (Array.isArray(data[jsonAutoform.name])) {
-        data[jsonAutoform.name].push(jsonAutoform.getFormData());
+      if (!jsonData[jsonAutoform.name]) {
+        jsonData[jsonAutoform.name] = jsonAutoform.getFormData();
+      } else if (Array.isArray(jsonData[jsonAutoform.name])) {
+        jsonData[jsonAutoform.name].push(jsonAutoform.getFormData());
       } else {
-        const tmp = data[jsonAutoform.name];
-        data[jsonAutoform.name] = [tmp, jsonAutoform.getFormData()];
+        const tmp = jsonData[jsonAutoform.name];
+        jsonData[jsonAutoform.name] = [tmp, jsonAutoform.getFormData()];
       }
     });
-    return data;
+    return jsonData;
   }
 
   render() {
