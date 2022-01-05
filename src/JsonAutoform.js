@@ -277,8 +277,12 @@ export class JsonAutoform extends LitElement {
   _drawFormFieldsModel() {
     const { fieldTypes, modelTypes } = this;
     this.allGroupValues = this._getAllGroupValues();
+    const groupAndNoGroupKeys = new Set([
+      ...this.allGroupValues,
+      ...Object.keys(fieldTypes),
+    ]);
     // Object.keys(fieldTypes).forEach(modelElementName => {
-    this.allGroupValues.forEach(modelElementName => {
+    groupAndNoGroupKeys.forEach(modelElementName => {
       const field = fieldTypes[modelElementName];
       const fieldSchemaType = modelTypes[modelElementName];
       // console.log(fieldSchemaType, field, modelElementName);
