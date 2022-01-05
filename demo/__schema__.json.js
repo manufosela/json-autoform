@@ -9,6 +9,7 @@ export default {
   },
   demo: {
     __fieldTypes__: {
+      single_hidden_field: 'hidden',
       single_number_field_one: 'number',
       single_text_field_two: 'text',
       single_text_field_twoandhalf: 'password',
@@ -30,6 +31,7 @@ export default {
       multiple_model_field_thirteen: 'model:multiple_model_field_thirteen',
     },
     __modelTypes__: {
+      single_hidden_field: 'single',
       single_number_field_one: 'single',
       single_text_field_two: 'single',
       single_text_field_twoandhalf: 'single',
@@ -108,7 +110,7 @@ export default {
         'info about multiple_textarea field twelwe',
       multiple_model_field_thirteen: 'info about multiple_model field thirteen',
     },
-    __validations__: {
+    __validationX__: {
       single_text_field_twoandhalf: {
         tovalidate: 'password',
       },

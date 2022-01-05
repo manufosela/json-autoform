@@ -210,35 +210,34 @@ export class JsonAutoform extends LitElement {
   }
 
   _drawSingleFields(
-    fieldFormType,
+    fieldType,
     modelElementName,
     container = this._getContainer(modelElementName),
     where = 'inside'
   ) {
-    const fieldFormTypeCleaned = fieldFormType.split(':')[0];
-    const fnFormType = Object.keys(this.fnFormTypes).includes(
-      fieldFormTypeCleaned
-    )
-      ? this.fnFormTypes[fieldFormTypeCleaned]
+    const fieldTypeCleaned = fieldType.split(':')[0];
+    const fnFormType = Object.keys(this.fnFormTypes).includes(fieldTypeCleaned)
+      ? this.fnFormTypes[fieldTypeCleaned]
       : this.fnFormTypes.input;
-    const field = fnFormType(modelElementName, fieldFormType);
+    const field =
+      fieldType === 'hidden'
+        ? this._createHiddenField(modelElementName, fieldType)
+        : fnFormType(modelElementName, fieldType);
     this._insertField(field, container, where);
-    this._createInfoIcon(field, modelElementName);
+    if (fieldType !== 'hidden') this._createInfoIcon(field, modelElementName);
   }
 
   _drawMultipleFields(
-    fieldFormType,
+    fieldType,
     modelElementName,
     container = this._getContainer(modelElementName),
     where = 'inside'
   ) {
-    const fieldFormTypeCleaned = fieldFormType.split(':')[0];
-    const fnFormType = Object.keys(this.fnFormTypes).includes(
-      fieldFormTypeCleaned
-    )
-      ? this.fnFormTypes[fieldFormTypeCleaned]
+    const fieldTypeCleaned = fieldType.split(':')[0];
+    const fnFormType = Object.keys(this.fnFormTypes).includes(fieldTypeCleaned)
+      ? this.fnFormTypes[fieldTypeCleaned]
       : this.fnFormTypes.input;
-    const field = fnFormType(modelElementName, fieldFormType);
+    const field = fnFormType(modelElementName, fieldType);
     const divLayer = this._createDivLayer(
       modelElementName,
       'multiple_container'
@@ -469,6 +468,14 @@ export class JsonAutoform extends LitElement {
       this._getElementId(layerPrefixName, modelElementName)
     );
     return divLayer;
+  }
+
+  _createHiddenField(modelElementName) {
+    const hidden = document.createElement('input');
+    hidden.setAttribute('type', 'hidden');
+    hidden.setAttribute('name', modelElementName);
+    hidden.setAttribute('id', this._getNewId(modelElementName));
+    return hidden;
   }
 
   _createInputField(modelElementName, fieldType = 'text') {
