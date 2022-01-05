@@ -277,7 +277,8 @@ export class JsonAutoform extends LitElement {
   _drawFormFieldsModel() {
     const { fieldTypes, modelTypes } = this;
     this.allGroupValues = this._getAllGroupValues();
-    Object.keys(fieldTypes).forEach(modelElementName => {
+    // Object.keys(fieldTypes).forEach(modelElementName => {
+    this.allGroupValues.forEach(modelElementName => {
       const field = fieldTypes[modelElementName];
       const fieldSchemaType = modelTypes[modelElementName];
       // console.log(fieldSchemaType, field, modelElementName);
@@ -448,7 +449,10 @@ export class JsonAutoform extends LitElement {
     const styleLegend = Number.isNaN(parseInt(modelElementName, 10))
       ? ''
       : ' style="display:none;"';
-    fieldset.innerHTML = `<legend${styleLegend}>${modelElementName}</legend>`;
+    const legend = this.labels[modelElementName]
+      ? this.labels[modelElementName]
+      : modelElementName;
+    fieldset.innerHTML = `<legend${styleLegend}>${legend}</legend>`;
     this.container.appendChild(fieldset);
     return fieldset;
   }

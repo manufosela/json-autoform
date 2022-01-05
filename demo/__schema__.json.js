@@ -49,6 +49,7 @@ export default {
       multiple_number_field_seven: 'multiple',
     },
     __labels__: {
+      single_group: 'Single Group',
       single_number_field_one: 'Single number field one',
       single_text_field_two: 'Single text field two',
       single_text_field_twoandhalf: 'Single text field two and half PASSWORD',
@@ -71,10 +72,10 @@ export default {
     __groups__: {
       1: ['single_text_field_twoandhalf'],
       single_group: [
-        'single_number_field_one',
         'single_text_field_two',
         'single_model_field_six',
         'single_file_field_six',
+        'single_number_field_one',
       ],
       newbbdd_group: [
         'multiple_number_field_seven',
