@@ -127,7 +127,10 @@ export class JsonAutoform extends LitElement {
       document.dispatchEvent(componentCreatedEvent);
     });
 
-    document.addEventListener('json-fill-data', this._fillData.bind(this));
+    document.addEventListener(
+      'json-autoform-fill-data-values',
+      this._fillData.bind(this)
+    );
   }
 
   _getDataVerified(jsonData) {
@@ -147,7 +150,7 @@ export class JsonAutoform extends LitElement {
     return realData;
   }
 
-  _fillDataValues(myScope = this.shadowRoot) {
+  fillDataValues(myScope = this.shadowRoot) {
     const scope = myScope;
     const dataKeys = Object.keys(this.jsonData);
     dataKeys.forEach(key => {
@@ -167,7 +170,7 @@ export class JsonAutoform extends LitElement {
   _fillData(event) {
     if (event.detail.id === this.id) {
       this.jsonData = this._getDataVerified(event.detail.jsonData);
-      this._fillDataValues();
+      this.fillDataValues();
     }
   }
 
@@ -849,7 +852,7 @@ export class JsonAutoform extends LitElement {
   }
 
   isFormUpdated() {
-    const updateEvent = new CustomEvent('form-updated', {
+    const updateEvent = new CustomEvent('json-autoform-field-updated', {
       detail: {
         types: this.fieldTypes,
       },
@@ -864,7 +867,7 @@ export class JsonAutoform extends LitElement {
     const okFieldsValidated = this.validateForm.validateFields();
     if (okFieldsNoEmpty && okFieldsValidated) {
       if (this.level === 0) {
-        const saveFormEvent = new CustomEvent('save-form', {
+        const saveFormEvent = new CustomEvent('json-autoform-save-form', {
           detail: {
             id: this.id,
             jsonData: this.jsonData,
