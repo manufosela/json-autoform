@@ -29,12 +29,12 @@ npm i json-autoform
 ### Dispatched events:
 
 - **wc-ready**: when the web component is ready.
-- **save-form**: when the form is saved.
-- **form-updated**: when a field of the form is updated.
+- **json-autoform-save-form**: when the form is saved.
+- **json-autoform-field-updated**: when a field of the form is updated.
 
 ### Listened events:
 
-- **json-fill-data**: to fill the form with data.
+- **json-autoform-fill-data-values**: to fill the form with data.
 
 ## Theming:
 
