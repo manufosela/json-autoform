@@ -1,6 +1,6 @@
 import { html, LitElement } from 'lit';
 import { ValidateForm } from 'automatic_form_validation';
-import 'rich-inputfile/rich-inputfile';
+import '@manufosela/rich-inputfile/rich-inputfile';
 import { jsonAutoformStyles } from './json-autoform-style.js';
 
 export class JsonAutoform extends LitElement {
@@ -49,6 +49,7 @@ export class JsonAutoform extends LitElement {
     this.level = level;
     this.autoSave = autoSave;
 
+    this.schema = {};
     this.fieldTypes = {};
     this.labels = {};
     this.modelTypes = {};
@@ -133,43 +134,37 @@ export class JsonAutoform extends LitElement {
     );
   }
 
-  _getDataVerified(jsonData) {
-    const realData = {};
-    if (jsonData) {
-      if (typeof jsonData === 'object') {
-        const dataKeys = Object.keys(jsonData);
-        dataKeys.forEach(key => {
-          if (typeof jsonData[key] === 'object') {
-            realData[key] = this._getDataVerified(jsonData[key]);
-          } else {
-            realData[key] = jsonData[key];
-          }
-        });
-      }
-    }
-    return realData;
-  }
+  // _getDataVerified(jsonData) {
+  //   const realData = {};
+  //   if (jsonData) {
+  //     if (typeof jsonData === 'object') {
+  //       const dataKeys = Object.keys(jsonData);
+  //       dataKeys.forEach(key => {
+  //         if (typeof jsonData[key] === 'object') {
+  //           realData[key] = this._getDataVerified(jsonData[key]);
+  //         } else {
+  //           realData[key] = jsonData[key];
+  //         }
+  //       });
+  //     }
+  //   }
+  //   return realData;
+  // }
 
-  fillDataValues(myScope = this.shadowRoot) {
-    const scope = myScope;
-    const dataKeys = Object.keys(this.jsonData);
-    dataKeys.forEach(key => {
-      const value = this.jsonData[key];
-      if (typeof value === 'object') {
-        this._fillDataValues(value);
-      } else if (scope.querySelector(`[name="${key}"]`)) {
-        scope.querySelector(`[name="${key}"]`).value = value;
-      } else {
-        scope.querySelectorAll('json-autoform').forEach(jsonAutoform => {
-          this._fillDataValues(jsonAutoform.shadowRoot);
-        });
-      }
-    });
+  _arrayBufferToBase64(buffer) {
+    this._null = null;
+    let binary = '';
+    const bytes = new Uint8Array(buffer);
+    const len = bytes.byteLength;
+    for (let i = 0; i < len; i += 1) {
+      binary += String.fromCharCode(bytes[i]);
+    }
+    return window.btoa(binary);
   }
 
   _fillData(event) {
     if (event.detail.id === this.id) {
-      this.jsonData = this._getDataVerified(event.detail.jsonData);
+      this.jsonData = event.detail.jsonData; // ¿PARA QUÉ HICE ESTO? this._getDataVerified(event.detail.jsonData);
       this.fillDataValues();
     }
   }
@@ -330,6 +325,7 @@ export class JsonAutoform extends LitElement {
     const elemAttributes = [
       `id="${modelElementName}"`,
       `name="${modelElementName}"`,
+      `show-thumbnail="true"`,
     ];
     if (validations) {
       const validationsKeys = Object.keys(validations);
@@ -881,12 +877,24 @@ export class JsonAutoform extends LitElement {
   getFormData() {
     const jsonData = {};
     this.container
-      .querySelectorAll(
-        'input[type="text"], input[type="number"], select, textarea, rich-inputfile'
-      )
+      .querySelectorAll('input, select, textarea, rich-inputfile')
       .forEach(input => {
-        if (!jsonData[input.name]) {
-          jsonData[input.name] = input.value;
+        if (input.tagName === 'RICH-INPUTFILE') {
+          const file = input.shadowRoot.querySelector('input').files[0];
+          // console.log(file);
+          const fileReader = new FileReader();
+          fileReader.onloadend = e => {
+            const arrayBuffer = e.target.result;
+            const imageBuffer = new Uint8Array(arrayBuffer);
+            jsonData[input.name] = imageBuffer;
+          };
+          fileReader.readAsArrayBuffer(file);
+        } else if (!jsonData[input.name]) {
+          if (input.type === 'checkbox') {
+            jsonData[input.name] = input.checked;
+          } else {
+            jsonData[input.name] = input.value;
+          }
         } else if (Array.isArray(jsonData[input.name])) {
           jsonData[input.name].push(input.value);
         } else {
@@ -914,6 +922,44 @@ export class JsonAutoform extends LitElement {
       }
     });
     return jsonData;
+  }
+
+  fillDataValues(jsonData = this.jsonData, jsonAutoform = this) {
+    const myJsonAutoform = jsonAutoform;
+    const myJsonData = jsonData;
+    const keys = Object.keys(jsonData);
+    keys.forEach(key => {
+      if (
+        myJsonAutoform.shadowRoot.querySelector(`json-autoform[name="${key}"]`)
+      ) {
+        const jsonAutoformChild = this.shadowRoot.querySelector(
+          `json-autoform[name="${key}"]`
+        );
+        myJsonAutoform.fillDataValues(jsonData[key], jsonAutoformChild);
+      } else if (
+        jsonAutoform.shadowRoot.querySelector(`input[name="${key}"]`)
+      ) {
+        myJsonAutoform.shadowRoot.querySelector(`input[name="${key}"]`).value =
+          jsonData[key];
+      } else if (
+        jsonAutoform.shadowRoot.querySelector(`select[name="${key}"]`)
+      ) {
+        myJsonAutoform.shadowRoot.querySelector(`select[name="${key}"]`).value =
+          jsonData[key];
+      } else if (
+        jsonAutoform.shadowRoot.querySelector(`rich-inputfile[name="${key}"]`)
+      ) {
+        if (
+          !Array.isArray(jsonData[key]) &&
+          typeof jsonData[key] === 'object'
+        ) {
+          myJsonData[key] = Object.values(jsonData[key]);
+        }
+        jsonAutoform.shadowRoot
+          .querySelector(`rich-inputfile[name="${key}"]`)
+          .setFileArrayUint8(jsonData[key]);
+      }
+    });
   }
 
   render() {

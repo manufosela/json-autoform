@@ -3,7 +3,7 @@
   "description": "Webcomponent json-autoform following open-wc recommendations",
   "license": "MIT",
   "author": "manufosela",
-  "version": "2.3.0",
+  "version": "2.5.0",
   "main": "json-autoform.js",
   "module": "json-autoform.js",
   "scripts": {
@@ -17,9 +17,9 @@
     "storybook:build": "npm run analyze -- --exclude dist && build-storybook"
   },
   "dependencies": {
+    "@manufosela/rich-inputfile": "^1.2.0",
     "automatic_form_validation": "^1.6.0",
-    "lit": "^2.0.2",
-    "rich-inputfile": "^1.2.0"
+    "lit": "^2.0.2"
   },
   "devDependencies": {
     "@custom-elements-manifest/analyzer": "^0.4.17",
