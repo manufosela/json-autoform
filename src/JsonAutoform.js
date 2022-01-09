@@ -110,46 +110,25 @@ export class JsonAutoform extends LitElement {
   }
 
   firstUpdated() {
-    customElements.whenDefined('rich-inputfile').then(() => {
-      if (super.firstUpdated) {
-        super.firstUpdated();
-      }
-      this.id = this.id || `json-autoform-${new Date().getTime()}`;
-      document.addEventListener('click', this._hideBocadillo.bind(this));
-      this.container = this.shadowRoot.querySelector('.container');
-      this._createBocadillo();
-      const componentCreatedEvent = new CustomEvent('wc-ready', {
-        detail: {
-          id: this.id,
-          componentName: this.tagName,
-          component: this,
-        },
-      });
-      document.dispatchEvent(componentCreatedEvent);
+    if (super.firstUpdated) super.firstUpdated();
+    this.id = this.id || `json-autoform-${new Date().getTime()}`;
+    document.addEventListener('click', this._hideBocadillo.bind(this));
+    this.container = this.shadowRoot.querySelector('.container');
+    this._createBocadillo();
+    const componentCreatedEvent = new CustomEvent('wc-ready', {
+      detail: {
+        id: this.id,
+        componentName: this.tagName,
+        component: this,
+      },
     });
+    document.dispatchEvent(componentCreatedEvent);
 
     document.addEventListener(
       'json-autoform-fill-data-values',
       this._fillData.bind(this)
     );
   }
-
-  // _getDataVerified(jsonData) {
-  //   const realData = {};
-  //   if (jsonData) {
-  //     if (typeof jsonData === 'object') {
-  //       const dataKeys = Object.keys(jsonData);
-  //       dataKeys.forEach(key => {
-  //         if (typeof jsonData[key] === 'object') {
-  //           realData[key] = this._getDataVerified(jsonData[key]);
-  //         } else {
-  //           realData[key] = jsonData[key];
-  //         }
-  //       });
-  //     }
-  //   }
-  //   return realData;
-  // }
 
   _arrayBufferToBase64(buffer) {
     this._null = null;
@@ -614,13 +593,14 @@ export class JsonAutoform extends LitElement {
   }
 
   /** CREATE ADD BUTTONS */
-  _addBtnProperties(btn, modelElementName) {
+  _addNewElementBtn(btn, modelElementName) {
     const addButton = btn;
     const numButtons = [
       ...this.shadowRoot.querySelectorAll(`[id^="add-${modelElementName}"]`),
     ].length;
     if (numButtons === 0) {
-      addButton.setAttribute('id', `add-${modelElementName}-${numButtons}`);
+      addButton.setAttribute('id', `add-${modelElementName}`);
+      addButton.name = 'addButton';
       addButton.title = `Add new ${modelElementName}`;
       addButton.innerHTML = 'Add';
       addButton.classList.add('btn', 'btn-primary');
@@ -631,15 +611,7 @@ export class JsonAutoform extends LitElement {
   _addNewElement(modelElementName, e) {
     e.preventDefault();
     const { parentElement } = e.target.parentElement;
-    const fieldFormType = this.fieldTypes[modelElementName];
-    const fieldType = this.modelTypes[modelElementName];
-    this.fnTypes[fieldType](
-      fieldFormType,
-      modelElementName,
-      parentElement,
-      'last'
-    );
-    // console.log(modelElementName, this.fieldTypes[modelElementName]);
+    this.addNewElement(modelElementName, parentElement);
   }
 
   _createAddButton(modelElementName) {
@@ -648,7 +620,7 @@ export class JsonAutoform extends LitElement {
     ].length;
     if (numButtons === 0) {
       const addButton = document.createElement('button');
-      this._addBtnProperties(addButton, modelElementName);
+      this._addNewElementBtn(addButton, modelElementName);
       addButton.addEventListener(
         'click',
         this._addNewElement.bind(this, modelElementName)
@@ -881,14 +853,15 @@ export class JsonAutoform extends LitElement {
       .forEach(input => {
         if (input.tagName === 'RICH-INPUTFILE') {
           const file = input.shadowRoot.querySelector('input').files[0];
-          // console.log(file);
-          const fileReader = new FileReader();
-          fileReader.onloadend = e => {
-            const arrayBuffer = e.target.result;
-            const imageBuffer = new Uint8Array(arrayBuffer);
-            jsonData[input.name] = imageBuffer;
-          };
-          fileReader.readAsArrayBuffer(file);
+          if (file) {
+            const fileReader = new FileReader();
+            fileReader.onloadend = e => {
+              const arrayBuffer = e.target.result;
+              const imageBuffer = new Uint8Array(arrayBuffer);
+              jsonData[input.name] = imageBuffer;
+            };
+            fileReader.readAsArrayBuffer(file);
+          }
         } else if (!jsonData[input.name]) {
           if (input.type === 'checkbox') {
             jsonData[input.name] = input.checked;
@@ -924,42 +897,83 @@ export class JsonAutoform extends LitElement {
     return jsonData;
   }
 
-  fillDataValues(jsonData = this.jsonData, jsonAutoform = this) {
-    const myJsonAutoform = jsonAutoform;
+  addNewElement(modelElementName, parentElement) {
+    const fieldFormType = this.fieldTypes[modelElementName];
+    const fieldType = this.modelTypes[modelElementName];
+    this.fnTypes[fieldType](
+      fieldFormType,
+      modelElementName,
+      parentElement,
+      'last'
+    );
+    // console.log(modelElementName, this.fieldTypes[modelElementName]);
+  }
+
+  createNewsJsonAutoform(jsonData) {
+    const _fillJsonAutoform = (_jsonData, e) => {
+      if (e.detail.componentName === 'JSON-AUTOFORM') {
+        const _jsonAutoform = e.detail.component;
+        _jsonAutoform.fillDataValuesSingle(_jsonData, _jsonAutoform);
+        document.removeEventListener('wc-ready', _fillJsonAutoform);
+      }
+    };
+    const btnAddNewElement =
+      this.shadowRoot.querySelector('[name="addButton"]');
+    btnAddNewElement.click();
+    document.addEventListener(
+      'wc-ready',
+      _fillJsonAutoform.bind(this, jsonData)
+    );
+  }
+
+  fillDataValuesMultiple(jsonData, jsonAutoform) {
+    jsonData.forEach((_jsonData, index) => {
+      if (index > 0) {
+        this.createNewsJsonAutoform(_jsonData);
+      } else {
+        jsonAutoform.fillDataValuesSingle(_jsonData, jsonAutoform);
+      }
+    });
+  }
+
+  fillDataValuesSingle(jsonData, jsonAutoform) {
     const myJsonData = jsonData;
+    const el = jsonAutoform;
+    const elSR = el.shadowRoot;
     const keys = Object.keys(jsonData);
     keys.forEach(key => {
-      if (
-        myJsonAutoform.shadowRoot.querySelector(`json-autoform[name="${key}"]`)
-      ) {
+      if (elSR.querySelector(`json-autoform[name="${key}"]`)) {
         const jsonAutoformChild = this.shadowRoot.querySelector(
           `json-autoform[name="${key}"]`
         );
-        myJsonAutoform.fillDataValues(jsonData[key], jsonAutoformChild);
-      } else if (
-        jsonAutoform.shadowRoot.querySelector(`input[name="${key}"]`)
-      ) {
-        myJsonAutoform.shadowRoot.querySelector(`input[name="${key}"]`).value =
-          jsonData[key];
-      } else if (
-        jsonAutoform.shadowRoot.querySelector(`select[name="${key}"]`)
-      ) {
-        myJsonAutoform.shadowRoot.querySelector(`select[name="${key}"]`).value =
-          jsonData[key];
-      } else if (
-        jsonAutoform.shadowRoot.querySelector(`rich-inputfile[name="${key}"]`)
-      ) {
+        el.fillDataValues(jsonData[key], jsonAutoformChild);
+      } else if (elSR.querySelector(`input[name="${key}"]`)) {
+        elSR.querySelector(`input[name="${key}"]`).value = jsonData[key];
+      } else if (elSR.querySelector(`select[name="${key}"]`)) {
+        elSR.querySelector(`select[name="${key}"]`).value = jsonData[key];
+      } else if (elSR.querySelector(`rich-inputfile[name="${key}"]`)) {
+        const richInputfile = elSR.querySelector(
+          `rich-inputfile[name="${key}"]`
+        );
         if (
           !Array.isArray(jsonData[key]) &&
           typeof jsonData[key] === 'object'
         ) {
           myJsonData[key] = Object.values(jsonData[key]);
+          richInputfile.setFileArrayUint8(jsonData[key]);
+        } else if (typeof jsonData[key] === 'string') {
+          richInputfile.setValue(jsonData[key]);
         }
-        jsonAutoform.shadowRoot
-          .querySelector(`rich-inputfile[name="${key}"]`)
-          .setFileArrayUint8(jsonData[key]);
       }
     });
+  }
+
+  fillDataValues(jsonData = this.jsonData, jsonAutoform = this) {
+    if (Array.isArray(jsonData)) {
+      this.fillDataValuesMultiple(jsonData, jsonAutoform);
+    } else {
+      this.fillDataValuesSingle(jsonData, jsonAutoform);
+    }
   }
 
   render() {
