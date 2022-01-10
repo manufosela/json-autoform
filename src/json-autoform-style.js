@@ -48,7 +48,8 @@ export const jsonAutoformStyles = css`
   }
 
   .form-control {
-    max-height: 2rem;
+    padding: var(--json-autoform-field-padding, 0.5rem);
+    max-height: var(--json-autoform-field-max-height, 2.4rem);
   }
 
   .bocadillo-cuadrado {
