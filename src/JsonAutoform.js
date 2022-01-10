@@ -1,3 +1,5 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable class-methods-use-this */
 import { html, LitElement } from 'lit';
 import { ValidateForm } from 'automatic_form_validation';
 import '@manufosela/rich-inputfile/rich-inputfile';
@@ -262,7 +264,13 @@ export class JsonAutoform extends LitElement {
       const field = fieldTypes[modelElementName];
       const fieldSchemaType = modelTypes[modelElementName];
       // console.log(fieldSchemaType, field, modelElementName);
-      this.fnTypes[fieldSchemaType](field, modelElementName);
+      if (fieldSchemaType) {
+        this.fnTypes[fieldSchemaType](field, modelElementName);
+      } else {
+        throw new Error(
+          `No se encontró __modelType__ para el campo: ${modelElementName}`
+        );
+      }
     });
   }
 
@@ -846,22 +854,28 @@ export class JsonAutoform extends LitElement {
     }
   }
 
+  _getFormDataRichInputfile(input, jsonData) {
+    const file = input.shadowRoot.querySelector('input').files[0];
+    if (file) {
+      const fileReader = new FileReader();
+      fileReader.onloadend = e => {
+        const arrayBuffer = e.target.result;
+        const imageBuffer = new Uint8Array(arrayBuffer);
+        jsonData[input.name] = imageBuffer;
+      };
+      fileReader.readAsArrayBuffer(file);
+    } else if (input.fileArrayUint8) {
+      jsonData[input.name] = input.fileArrayUint8;
+    }
+  }
+
   getFormData() {
     const jsonData = {};
     this.container
       .querySelectorAll('input, select, textarea, rich-inputfile')
       .forEach(input => {
         if (input.tagName === 'RICH-INPUTFILE') {
-          const file = input.shadowRoot.querySelector('input').files[0];
-          if (file) {
-            const fileReader = new FileReader();
-            fileReader.onloadend = e => {
-              const arrayBuffer = e.target.result;
-              const imageBuffer = new Uint8Array(arrayBuffer);
-              jsonData[input.name] = imageBuffer;
-            };
-            fileReader.readAsArrayBuffer(file);
-          }
+          this._getFormDataRichInputfile(input, jsonData);
         } else if (!jsonData[input.name]) {
           if (input.type === 'checkbox') {
             jsonData[input.name] = input.checked;
