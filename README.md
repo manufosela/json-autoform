@@ -67,6 +67,8 @@ npm i json-autoform
 - **--json-autoform-btn-primary-background-color**. Default #0d6efd
 - **--json-autoform-btn-primary-border-color**. Default #0d6efd
 - **--json-autoform-btn-primary-margin-left**. Default 1rem
+- **--json-autoform-field-padding** Default 0.5rem
+- **--json-autoform-field-max-height** Default 2.4rem
 
 ## SCHEMA
 
