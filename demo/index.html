@@ -15,14 +15,14 @@
     <script type="module">
       import { html, render } from 'lit';
       import '../json-autoform.js';
-      import schema from './__schema2__.json.js';
+      import schema from './__schemaKv__.json.js';
 
       render(
         html`
           <json-autoform
             id="jsonAutoform-1"
             name="Seguimiento Mensual"
-            model-name="seguimientos"
+            model-name="kairriculum"
           ></json-autoform>
         `,
         document.querySelector('#demo')
