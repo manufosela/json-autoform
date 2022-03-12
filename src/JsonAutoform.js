@@ -820,7 +820,7 @@ export class JsonAutoform extends LitElement {
     }
   }
 
-  _getFormDataRichInputfile(input, jsonData) {
+  async _getFormDataRichInputfile(input, jsonData) {
     const file = input.shadowRoot.querySelector('input').files[0];
     if (file) {
       const fileReader = new FileReader();
@@ -829,7 +829,7 @@ export class JsonAutoform extends LitElement {
         const imageBuffer = new Uint8Array(arrayBuffer);
         jsonData[input.name] = imageBuffer;
       };
-      fileReader.readAsArrayBuffer(file);
+      await fileReader.readAsArrayBuffer(file);
     } else if (input.fileArrayUint8) {
       jsonData[input.name] = input.fileArrayUint8;
     }
