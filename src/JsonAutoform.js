@@ -428,8 +428,8 @@ export class JsonAutoform extends LitElement {
       ? ''
       : ' style="display:none;"';
     const legend = this.labels[modelElementName]
-      ? this.labels[modelElementName]
-      : modelElementName;
+      ? this.labels[modelElementName].replace(/_/g, ' ')
+      : modelElementName.replace(/_/g, ' ');
     fieldset.innerHTML = `<legend${styleLegend}>${legend}</legend>`;
     this.container.appendChild(fieldset);
     return fieldset;

@@ -56,7 +56,7 @@ export default {
     __groups__: {
       1: ['nombre', 'apellidos', 'foto', 'descripcion'],
       Cursos: ['curso'],
-      Formaciones: ['formacion'],
+      Formacion_Academica: ['formacion'],
       Experiencia: ['experiencia'],
       Idiomas: ['idioma'],
       Tecnologías: ['tecnologia'],
