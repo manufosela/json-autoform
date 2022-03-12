@@ -1,0 +1,260 @@
+{
+  "kairriculum": {
+    "__fieldTypes__": {
+      "nombre": "string",
+      "apellidos": "string",
+      "foto": "file",
+      "descripcion": "textarea",
+      "curso": "model:/curso",
+      "formacion": "model:/formacion",
+      "experiencia": "model:/experiencia",
+      "idioma": "model:/idioma",
+      "tecnologia": "model:/tecnologia",
+      "certificacion": "model:/certificacion",
+      "__createdAt": "hidden",
+      "__updatedAt": "hidden",
+      "__revised": "hidden"
+    },
+    "__modelTypes__": {
+      "nombre": "single",
+      "apellidos": "single",
+      "foto": "single",
+      "descripcion": "single",
+      "curso": "multiple",
+      "formacion": "multiple",
+      "experiencia": "multiple",
+      "idioma": "multiple",
+      "tecnologia": "multiple",
+      "certificacion": "multiple",
+      "__createdAt": "single",
+      "__updatedAt": "single",
+      "__revised": "single"
+
+    },
+    "__labels__": {
+      "nombre": "Nombre",
+      "apellidos": "Apellidos",
+      "foto": "Foto",
+      "descripcion": "Descripción profesional",
+      "curso": "Curso",
+      "formacion": "Formación",
+      "experiencia": "Experiencia",
+      "idioma": "Idioma",
+      "tecnologia": "Tecnología",
+      "certificacion": "Certificación"
+    },
+    "__groups__": {
+      "1": ["nombre", "apellidos", "foto", "descripcion"],
+      "Cursos": ["curso"],
+      "Formaciones": ["formacion"],
+      "Experiencia": ["experiencia"],
+      "Idiomas": ["idioma"],
+      "Tecnologías": ["tecnologia"],
+      "Certificaciones": ["certificacion"]
+    },
+    "__info__": {
+      "foto": "Foto de perfil, fondo blanco",
+      "descripcion": "Descripción de ti como profesional en 2-3 líneas. Perfil, rol, experiencia, etc.",
+      "cursos": "Cursos que has cursado",
+      "formacion": "Formación académica oficial",
+      "experiencia": "Experiencia laboral",
+      "idiomas": "Idiomas que hablas",
+      "tecnologías": "Tecnologías que manejas",
+      "certificaciones": "Certificaciones que has obtenido"
+    },
+    "__validations__": {
+      "nombre": {
+        "required": true
+      },
+      "apellidos": {
+        "required": true
+      },
+      "foto": {
+        "required": true
+      },
+      "descripcion": {
+        "required": true
+      }
+    }
+  },
+  "curso": {
+    "__fieldTypes__": {
+      "nombre": "string",
+      "descripcion": "textarea",
+      "fecha": "string",
+      "duracion": "string",
+      "impartidopor": "string",
+      "url": "url"
+    },
+    "__modelTypes__": {
+      "nombre": "single",
+      "descripcion": "single",
+      "fecha": "single",
+      "duracion": "single",
+      "impartidopor": "single",
+      "url": "single"
+    },
+    "__labels__": {
+      "nombre": "Nombre",
+      "descripcion": "Descripción",
+      "fecha": "Fecha",
+      "duracion": "Duración",
+      "impartidopor": "Impartido por",
+      "url": "URL"
+    },
+    "__groups__": {},
+    "__info__": {
+      "nombre": "Nombre del curso",
+      "descripcion": "Descripción del curso",
+      "fecha": "Fecha en la que se impartió",
+      "duracion": "Duración del curso",
+      "impartidopor": "Impartido por",
+      "url": "URL del curso"
+    },
+    "__validations__": {}
+  },
+  "formacion": {
+    "__fieldTypes__": {
+      "titulacion": "string",
+      "descripcion": "textarea",
+      "fechaobtencion": "string",
+      "institucion": "string",
+      "url": "url"
+    },
+    "__modelTypes__": {
+      "titulacion": "single",
+      "descripcion": "single",
+      "fechaobtencion": "single",
+      "institucion": "single",
+      "url": "single"
+    },
+    "__labels__": {
+      "titulacion": "Titulación",
+      "descripcion": "Descripción",
+      "fechaobtencion": "Fecha de obtención",
+      "institucion": "Institución",
+      "url": "URL"
+    },
+    "__groups__": {},
+    "__info__": {
+      "titulacion": "Titulación obtenida",
+      "descripcion": "Descripción de la titulación",
+      "fechaobtencion": "Fecha de obtención de la titulación",
+      "institucion": "Institución donde se obtuvo la titulación",
+      "url": "URL de la institución"
+    },
+    "__validations__": {}
+  },
+  "experiencia": {
+    "__fieldTypes__": {
+      "empresa": "string",
+      "cargo": "string",
+      "descripcion": "textarea",
+      "fechainicio": "string",
+      "fechafin": "string",
+      "url": "url"
+    },
+    "__modelTypes__": {
+      "empresa": "single",
+      "cargo": "single",
+      "descripcion": "single",
+      "fechainicio": "single",
+      "fechafin": "single",
+      "url": "single"
+    },
+    "__labels__": {
+      "empresa": "Empresa",
+      "cargo": "Cargo",
+      "descripcion": "Descripción",
+      "fechainicio": "Fecha de inicio",
+      "fechafin": "Fecha de fin",
+      "url": "URL"
+    },
+    "__groups__": {},
+    "__info__": {
+      "empresa": "Empresa donde trabajaste",
+      "cargo": "Cargo que desempeñaste",
+      "descripcion": "Descripción de tu trabajo",
+      "fechainicio": "Fecha de inicio de tu trabajo",
+      "fechafin": "Fecha de fin de tu trabajo",
+      "url": "URL de la empresa"
+    },
+    "__validations__": {}
+  },
+  "idioma": {
+    "__fieldTypes__": {
+      "idioma": "string",
+      "nivel": "string",
+      "certificado": "boolean"
+    },
+    "__modelTypes__": {
+      "idioma": "single",
+      "nivel": "single",
+      "certificado": "single"
+    },
+    "__labels__": {
+      "idioma": "Idioma",
+      "nivel": "Nivel",
+      "certificado": "Certificado"
+    },
+    "__groups__": {},
+    "__info__": {
+      "idioma": "Idioma que hablas",
+      "nivel": "Nivel de conocimiento A2,B1,B2,C1,etc.",
+      "certificado": "¿Tienes certificado?"
+    },
+    "__validations__": {}
+  },
+  "tecnologia": {
+    "__fieldTypes__": {
+      "tecnologia": "string",
+      "añosexperiencia": "string",
+      "nivel": "select:/nivel"
+    },
+    "__modelTypes__": {
+      "tecnologia": "single",
+      "añosexperiencia": "single",
+      "nivel": "single"
+    },
+    "__labels__": {
+      "tecnologia": "Tecnología",
+      "nivel": "Nivel"
+    },
+    "__groups__": {},
+    "__info__": {
+      "tecnologia": "Tecnología que manejas",
+      "añosexperiencia": "Años de experiencia",
+      "nivel": "Nivel de conocimiento"
+    },
+    "__validations__": {}
+  },
+  "certificacion": {
+    "__fieldTypes__": {
+      "nombre": "string",
+      "descripcion": "textarea",
+      "fecha": "string",
+      "url": "url"
+    },
+    "__modelTypes__": {
+      "nombre": "single",
+      "descripcion": "single",
+      "fecha": "single",
+      "url": "single"
+    },
+    "__labels__": {
+      "nombre": "Nombre",
+      "descripcion": "Descripción",
+      "fecha": "Fecha",
+      "url": "URL"
+    },
+    "__groups__": {},
+    "__info__": {
+      "nombre": "Nombre de la certificación",
+      "descripcion": "Descripción de la certificación",
+      "fecha": "Fecha de obtención de la certificación",
+      "url": "URL de la certificación"
+    },
+    "__validations__": {}
+  },
+  "nivel": ["iniciación", "medio", "alto", "experto"]
+}
