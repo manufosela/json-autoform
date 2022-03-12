@@ -108,15 +108,12 @@ export class JsonAutoform extends LitElement {
     if (super.disconnectedCallback) {
       super.disconnectedCallback();
     }
-    document.removeEventListener('click', this._hideBocadillo.bind(this));
   }
 
   firstUpdated() {
     if (super.firstUpdated) super.firstUpdated();
     this.id = this.id || `json-autoform-${new Date().getTime()}`;
-    document.addEventListener('click', this._hideBocadillo.bind(this));
     this.container = this.shadowRoot.querySelector('.container');
-    this._createBocadillo();
     const componentCreatedEvent = new CustomEvent('wc-ready', {
       detail: {
         id: this.id,
@@ -276,7 +273,6 @@ export class JsonAutoform extends LitElement {
 
   _drawFormScaffolding() {
     this.container.innerHTML = '';
-    this.container.appendChild(this.bocadillo);
     this._drawFieldsetsFormGroups();
     this._drawFormFieldsModel();
     this.validateForm = new ValidateForm(this.isFormUpdated, {
@@ -412,18 +408,11 @@ export class JsonAutoform extends LitElement {
   _createInfoIcon(element, modelElementName) {
     if (this.info) {
       const label = element.querySelector('label');
-      const infoIcon = document.createElement('div');
-      infoIcon.classList.add('info-space');
-      element.insertBefore(infoIcon, label);
       if (this.info[modelElementName]) {
-        infoIcon.classList.add('info-icon');
-        infoIcon.addEventListener('click', ev => {
-          ev.stopPropagation();
-          ev.preventDefault();
-          const targetInfo = ev.target.getClientRects();
-          const bocadillo = this.info[modelElementName];
-          this._showBocadillo(targetInfo, bocadillo);
-        });
+        element.insertBefore(
+          this._getBocadillo(this.info[modelElementName]),
+          label
+        );
       }
     }
   }
@@ -648,32 +637,14 @@ export class JsonAutoform extends LitElement {
     saveButton.addEventListener('click', this.saveForm);
   }
 
-  /** BOCADILLO */
-  _createBocadillo() {
-    this.bocadillo = document.createElement('div');
-    this.bocadillo.setAttribute('id', 'bocadillo');
-    this.bocadillo.setAttribute('style', 'display: none;');
-    this.bocadillo.classList.add('bocadillo-cuadrado');
-  }
-
-  _showBocadillo(targetInfo, bocadillo) {
-    if (bocadillo) {
-      this.bocadillo.style.display = 'block';
-      const { scrollY } = window;
-      const targetInfoTop = targetInfo[0].top;
-      const targetInfoHeight = targetInfo[0].height;
-      const bocadilloInfoHeight = this.bocadillo.getBoundingClientRect().height;
-      const targetInfoBottom =
-        targetInfoTop - targetInfoHeight - bocadilloInfoHeight + scrollY;
-      this.bocadillo.innerHTML = `<p>${bocadillo}</p>`;
-      this.bocadillo.style.top = `${targetInfoBottom}px`;
-    }
-  }
-
-  _hideBocadillo(ev) {
-    if (ev.target.id !== 'bocadillo') {
-      this.bocadillo.style.display = 'none';
-    }
+  _getBocadillo(bocadilloContent) {
+    const tooltipContent = document.createElement('div');
+    tooltipContent.classList.add('info-space', 'info-icon', 'tooltip-info');
+    const tootipText = document.createElement('div');
+    tootipText.classList.add('tooltiptext');
+    tootipText.innerHTML = bocadilloContent;
+    tooltipContent.appendChild(tootipText);
+    return tooltipContent;
   }
 
   /** SETTERS */
@@ -714,11 +685,6 @@ export class JsonAutoform extends LitElement {
     select.addEventListener('change', e => {
       this.jsonData[modelElementName] = e.target.value;
       this.isFormUpdated();
-    });
-    select.addEventListener('focus', ev => {
-      const targetInfo = ev.target.getClientRects();
-      const bocadillo = this.info[modelElementName];
-      this._showBocadillo(targetInfo, bocadillo);
     });
   }
 
