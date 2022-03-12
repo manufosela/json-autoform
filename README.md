@@ -76,7 +76,7 @@ El esquema que interpreta el componente es una estructura de datos que define el
 Tiene la siguiente estructura:
 
 ```json
-"nombre_formulario"": {
+"nombre_formulario": {
   "__fieldTypes__": {},
   "__modelTypes__": {},
   "__labels__": {},
