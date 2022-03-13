@@ -28,6 +28,16 @@
         document.querySelector('#demo')
       );
 
+      document.addEventListener('json-autoform-field-updated', e => {
+        console.log('field updated', e);
+      });
+
+      document.addEventListener('file-uploaded', e => {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log(`Uploaded ${e.detail.file.name}`);
+      });
+
       document.addEventListener('wc-ready', e => {
         console.log('wc-ready', e.detail);
         if (e.detail.id === 'jsonAutoform-1') {
