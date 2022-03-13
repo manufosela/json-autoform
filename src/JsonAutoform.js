@@ -684,21 +684,21 @@ export class JsonAutoform extends LitElement {
   _addSelectEvents(select, modelElementName) {
     select.addEventListener('change', e => {
       this.jsonData[modelElementName] = e.target.value;
-      this.isFormUpdated();
+      this.isFormUpdated(e.target);
     });
   }
 
   _addInputEvents(input, modelElementName) {
     input.addEventListener('blur', e => {
       this.jsonData[modelElementName] = e.target.value;
-      this.isFormUpdated();
+      this.isFormUpdated(e.target);
     });
   }
 
   _addTextareaEvents(textarea, modelElementName) {
     textarea.addEventListener('change', e => {
       this.jsonData[modelElementName] = e.target.value;
-      this.isFormUpdated();
+      this.isFormUpdated(e.target);
     });
   }
 
@@ -793,10 +793,11 @@ export class JsonAutoform extends LitElement {
     }
   }
 
-  isFormUpdated() {
+  isFormUpdated(target = null) {
     const updateEvent = new CustomEvent('json-autoform-field-updated', {
       detail: {
         types: this.fieldTypes,
+        target,
       },
     });
     document.dispatchEvent(updateEvent);
