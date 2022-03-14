@@ -930,6 +930,8 @@ export class JsonAutoform extends LitElement {
         el.fillDataValues(jsonData[key], jsonAutoformChild);
       } else if (elSR.querySelector(`input[name="${key}"]`)) {
         elSR.querySelector(`input[name="${key}"]`).value = jsonData[key];
+      } else if (elSR.querySelector(`textarea[name="${key}"]`)) {
+        elSR.querySelector(`textarea[name="${key}"]`).value = jsonData[key];
       } else if (elSR.querySelector(`select[name="${key}"]`)) {
         elSR.querySelector(`select[name="${key}"]`).value = jsonData[key];
       } else if (elSR.querySelector(`rich-inputfile[name="${key}"]`)) {
