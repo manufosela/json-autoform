@@ -388,6 +388,7 @@ export class JsonAutoform extends LitElement {
     this._null = null;
     const optionDefault = document.createElement('option');
     optionDefault.setAttribute('value', '');
+    optionDefault.setAttribute('selected', true);
     optionDefault.innerHTML = 'Selecciona una opción';
     select.appendChild(optionDefault);
     types.forEach(item => {
@@ -940,6 +941,25 @@ export class JsonAutoform extends LitElement {
         elSR.querySelector(`textarea[name="${key}"]`).value = jsonData[key];
       } else if (elSR.querySelector(`select[name="${key}"]`)) {
         elSR.querySelector(`select[name="${key}"]`).value = jsonData[key];
+        if (
+          elSR
+            .querySelector(`select[name="${key}"]`)
+            .querySelector(`option[value="${jsonData[key]}"]`)
+        ) {
+          const select = elSR.querySelector(`select[name="${key}"]`);
+          select
+            .querySelector(`option[value=""]`)
+            .removeAttribute('selected', 'true');
+          select
+            .querySelector(`option[value="${jsonData[key]}"]`)
+            .setAttribute('selected', 'true');
+        } else {
+          console.log(
+            key,
+            jsonData[key],
+            elSR.querySelectorAll(`select[name="${key}"]`)
+          );
+        }
       } else if (elSR.querySelector(`rich-inputfile[name="${key}"]`)) {
         const richInputfile = elSR.querySelector(
           `rich-inputfile[name="${key}"]`
