@@ -36,6 +36,10 @@ export const jsonAutoformStyles = css`
     grid-area: 2 / 2 / 2 / 3;
   }
 
+  input:invalid {
+    border: 1px solid red;
+  }
+
   button {
     max-height: 2.5rem;
   }
